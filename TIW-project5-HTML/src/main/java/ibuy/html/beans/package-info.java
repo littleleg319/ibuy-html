@@ -1,1 +1,0 @@
-package ibuy.html.beans;
