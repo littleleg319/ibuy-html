@@ -92,7 +92,6 @@ public class GotoHome extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
 			return;
 		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -101,6 +100,14 @@ public class GotoHome extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	
+	public void destroy() {
+		try {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

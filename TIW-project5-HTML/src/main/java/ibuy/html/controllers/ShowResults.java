@@ -56,6 +56,8 @@ public class ShowResults extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//		response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		List<Product> prods_list = new ArrayList<Product>();
@@ -63,21 +65,36 @@ public class ShowResults extends HttpServlet {
 		String keyword = null;
 			try { 
 				keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
-				if (keyword != null) {
-					prods_list = products.findProductsByKey(keyword);
+				if (keyword == null) {
+					String path;
+					request.getSession().setAttribute("user", user);
+					path = getServletContext().getContextPath() + "/GoToHome";
+					response.sendRedirect(path);
+				} else {
+					System.out.print(keyword);
+					prods_list = products.findProductsByKey(keyword); 
+					if (prods_list == null) {
+						String path;
+						request.getSession().setAttribute("user", user);
+						path = getServletContext().getContextPath() + "/GoToHome";
+						response.sendRedirect(path);
+					} else {
 					String path = "/WEB-INF/Results.html";
 					ServletContext servletContext = getServletContext();
 					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 					ctx.setVariable("products", prods_list);
+					ctx.setVariable("keyword", keyword);
 					templateEngine.process(path, ctx, response.getWriter());
+					}
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				//		e.printStackTrace();
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
+				//	e.printStackTrace();
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
 						return;
 					}
 	}
+	
 		
 
 	/**
@@ -85,7 +102,15 @@ public class ShowResults extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+				doGet(request, response);
+	}
+	
+	public void destroy() {
+		try {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
