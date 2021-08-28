@@ -21,8 +21,10 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import ibuy.html.beans.Product;
+import ibuy.html.beans.Supplier;
 import ibuy.html.beans.User;
 import ibuy.html.dao.ProductDAO;
+import ibuy.html.dao.SupplierDAO;
 import ibuy.html.utilities.ConnectionHandler;
 
 /**
@@ -63,15 +65,18 @@ public class ShowResults extends HttpServlet {
 		List<Product> prods_list = new ArrayList<Product>();
 		ProductDAO products = new ProductDAO(connection);
 		String keyword = null;
+		String code = null;
+		code = StringEscapeUtils.escapeJava(request.getParameter("code"));
 			try { 
+				//Controllo che mi abbiano dato la chiave di ricerca e sono nella prima pagina
 				keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
-				if (keyword == null) {
+				if (keyword == null & code == null) {
 					String path;
 					request.getSession().setAttribute("user", user);
 					path = getServletContext().getContextPath() + "/GoToHome";
 					response.sendRedirect(path);
-				} else {
-					System.out.print(keyword);
+				} else if (code == null) { 
+				//sono nell'overview dei risultati
 					prods_list = products.findProductsByKey(keyword); 
 					if (prods_list == null) {
 						String path;
@@ -86,15 +91,45 @@ public class ShowResults extends HttpServlet {
 					ctx.setVariable("keyword", keyword);
 					templateEngine.process(path, ctx, response.getWriter());
 					}
+				} else { //ho scelto un prodotto
+				Product prod = new Product();
+				List<Supplier> suppliers = new ArrayList<Supplier>();
+				SupplierDAO supp = new SupplierDAO(connection);
+				prod = products.findProductDetails(code); 
+				if (prod == null) {
+					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
+					return;
+				} else {			
+				
+					String path = "/WEB-INF/Results.html";
+					ServletContext servletContext = getServletContext();
+					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+					ctx.setVariable("prod_details", prod);
+					suppliers = supp.findSupplierDetails(code);
+						if (suppliers == null) {
+							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
+							return;
+						} else {
+							ctx.setVariable("suppl_details", suppliers);
+							prods_list = products.findProductsByKey(keyword); 
+							if (prods_list == null) {
+								response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
+								return;
+							} else {
+							ctx.setVariable("products", prods_list);
+							ctx.setVariable("keyword", keyword);
+							templateEngine.process(path, ctx, response.getWriter());
+							}
+						}			
 				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				//	e.printStackTrace();
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-						return;
-					}
-	}
-	
+			}
+	}catch (SQLException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+			//	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
+				return;
+			}
+}	
 		
 
 	/**

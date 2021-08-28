@@ -2,13 +2,15 @@ package ibuy.html.beans;
 
 import java.sql.Blob;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+
 public class Product {
 	
 	private String code;
 	private String name;
 	private String description;
 	private String category;
-	private Blob photo;
+	private String photo;
 	private String price;
 	
 	public String getCode() {
@@ -43,12 +45,12 @@ public class Product {
 		this.category = category;
 	}
 
-	public Blob getPhoto() {
+	public String getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto (Blob blob) {
-		this.photo = blob;
+	public void setPhoto (String string) {
+		this.photo = string;
 	}
 	
 	public String getPrice() {
@@ -58,4 +60,5 @@ public class Product {
 	public void setPrice (String price) {
 		this.price = price;
 	}
+	
 }

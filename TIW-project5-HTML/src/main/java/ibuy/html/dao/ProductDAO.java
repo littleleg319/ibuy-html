@@ -1,11 +1,14 @@
 package ibuy.html.dao;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import ibuy.html.beans.Product;
 import ibuy.html.beans.User;
@@ -118,7 +121,7 @@ public class ProductDAO {
 		}
 		
 		public Product findProductDetails(String productid) throws SQLException{
-			String check = "SELECT * FROM product WHERE code = ?)";
+			String check = "SELECT * FROM product WHERE code = ?";
 			Product prod = new Product();
 			try (PreparedStatement ps = con.prepareStatement(check);) {
 				ps.setString(1, productid);
@@ -130,7 +133,11 @@ public class ProductDAO {
 						prod.setCode(res.getString("code"));
 						prod.setName(res.getString("name"));
 						prod.setDescription(res.getString("description"));
-						prod.setPhoto(res.getBlob("photo"));
+						Blob tmp = res.getBlob("photo");
+						int photolength = (int) tmp.length();
+						byte[] tmpasbyte = tmp.getBytes(1, photolength);
+						prod.setPhoto(Base64.encodeBase64String(tmpasbyte));
+						tmp.free();
 					}
 				}
 			}
