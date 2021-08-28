@@ -65,17 +65,28 @@ public class CheckLogin extends HttpServlet {
 		// TODO Auto-generated method stub
 		String usrn = null;
 		String pwd = null;
+		String path = null;
 		usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
 		pwd = StringEscapeUtils.escapeJava(request.getParameter("pwd"));
 		if (usrn == null || usrn.isEmpty() ) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Username must be not null");
-			return;
+		//	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		//	response.getWriter().println("Username must be not null");
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("errorMsg", "Please fill with your username");
+			path = "/default.html";
+			templateEngine.process(path, ctx, response.getWriter());
+		//	return;
 		} 
 		if (pwd==null || pwd.isEmpty() ) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Password must be not null");
-			return;
+			//response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			// response.getWriter().println("Password must be not null");
+			//return;
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("errorMsg", "Please fill with your password");
+			path = "/default.html";
+			templateEngine.process(path, ctx, response.getWriter());
 		}
 		// query db to authenticate for user
 		UserDAO userDao = new UserDAO(connection);
@@ -93,7 +104,7 @@ public class CheckLogin extends HttpServlet {
 
 		// If the user exists, add info to the session and go to home page, otherwise
 		// return an error status code and message
-		String path;
+		
 		if (user == null) {
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

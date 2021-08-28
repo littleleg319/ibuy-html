@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -21,27 +22,25 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import ibuy.html.beans.Product;
 import ibuy.html.beans.User;
-import ibuy.html.utilities.ConnectionHandler;
 import ibuy.html.dao.ProductDAO;
-import ibuy.html.dao.UserDAO;
+import ibuy.html.utilities.ConnectionHandler;
+
 /**
- * Servlet implementation class GotoHome
+ * Servlet implementation class ShowResults
  */
-@WebServlet("/GoToHome")
-public class GotoHome extends HttpServlet {
+@WebServlet("/ShowResults")
+public class ShowResults extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
 	private TemplateEngine templateEngine;
 	private Connection connection = null;
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GotoHome() {
+    public ShowResults() {
         super();
         // TODO Auto-generated constructor stub
     }
-    
+
     //inizializzazione connessione e context
     public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
@@ -53,47 +52,33 @@ public class GotoHome extends HttpServlet {
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
     
-    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//Check Login fatto con filtro
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		List<Product> recent_prod = new ArrayList<Product>();
+		List<Product> prods_list = new ArrayList<Product>();
 		ProductDAO products = new ProductDAO(connection);
-		try {
-			int myprods = products.findmissingProd(user.getId());
-			if (myprods == 0) {
-				recent_prod = products.findProductsByDefaultCat(myprods);
-				// Redirect to the Home page and add missions to the parameters
-				String path = "/WEB-INF/Home.html";
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-				ctx.setVariable("products", recent_prod);
-				templateEngine.process(path, ctx, response.getWriter());
-			}
-			else {
-				recent_prod = products.findLastProductByUser(user.getId());
-				List<Product> default_prod = new ArrayList<Product>();
-				default_prod = products.findProductsByDefaultCat(myprods);
-				String path = "/WEB-INF/Home.html";
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-				ctx.setVariable("products", recent_prod);
-				ctx.setVariable("default_prods",default_prod);
-				templateEngine.process(path, ctx, response.getWriter());
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-	//		e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
-			return;
-		}
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String keyword = null;
+			try { 
+				keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
+				if (keyword != null) {
+					prods_list = products.findProductsByKey(keyword);
+					String path = "/WEB-INF/Results.html";
+					ServletContext servletContext = getServletContext();
+					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+					ctx.setVariable("products", prods_list);
+					templateEngine.process(path, ctx, response.getWriter());
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//		e.printStackTrace();
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
+						return;
+					}
 	}
+		
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

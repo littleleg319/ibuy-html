@@ -92,4 +92,26 @@ public class ProductDAO {
 			}
 			return s;
 		}
+		
+		public List<Product> findProductsByKey(String key) throws SQLException{
+			List<Product> prods = new ArrayList<Product>();
+			String check = "SELECT p.code, p.name, s.price FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like %?% or p.description like '%?%') AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
+			try (PreparedStatement ps = con.prepareStatement(check);) {
+				ps.setString(1,key);
+				ps.setString(2,key);
+				ResultSet res = ps.executeQuery();
+				if (res.isBeforeFirst())
+					return null;
+				else {
+					while(res.next()) {
+						Product prod = new Product();
+						prod.setCode(res.getString("code"));
+						prod.setName(res.getString("name"));
+						prod.setPrice(res.getString("price"));
+						prods.add(prod);
+					}
+				}
+			}
+			return prods;
+		}
 }

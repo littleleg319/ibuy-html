@@ -7,6 +7,7 @@ public class Product {
 	private String description;
 	private String category;
 	private String photo;
+	private String price;
 	
 	public String getCode() {
 		return code;
@@ -46,5 +47,13 @@ public class Product {
 
 	public void setPhoto (String photo) {
 		this.photo = photo;
+	}
+	
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice (String price) {
+		this.price = price;
 	}
 }
