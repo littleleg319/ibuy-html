@@ -1,0 +1,53 @@
+<!DOCTYPE html>	
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>iBuy Shopping Center</title>
+</head>
+<body>
+	<h1>Welcome to iBuy </h1>
+<p th:text="${'Hi ' + session.user.name + '!'}"></p>
+<div></div>
+<input type="text" placeholder="Search..">
+<div></div>
+<p th:text="'Results for ' + ${keyword}"></p>
+	<table>
+		<thead>
+			<tr>
+				<th>Code</th>
+				<th>Product Name</th>
+				<th>Starting from</th>> 
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="p : ${products}">
+				<td th:text="${p.code}"></td>
+				<td><a th:href="@{/ShowResults(code=${p.code})}" th:text="${p.name }"></a></td></td>
+				<td th:text="${p.price }"></td>
+			</tr>
+		</tbody>
+	</table>
+
+<div th:if="${prod_details != null}">
+	<table>
+		<thead>
+				<p> Product Details </p>
+			<tr>		
+				<th> Product Code</th>
+				<th>Product Name</th>
+				<th>Product Description</th>
+			</tr>
+			<tr>
+			<td th:text="${prod_details.code}"
+				th:if="${not prod_details.isEmpty()}"></td>
+			<td th:text="${prod_details.name}"></td>
+		    <td th:text="${prod_details.description}"></td>
+			<td> 
+				<img  th:src="@{'data:image/jpeg;base64,'+${prod_details.photo}}"/>
+			</td>
+			</tr>
+		</thead>
+	</table>
+</div>
+</body>
+</html>
