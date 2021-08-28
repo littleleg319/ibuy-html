@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -92,19 +93,17 @@ public class CheckLogin extends HttpServlet {
 
 		// If the user exists, add info to the session and go to home page, otherwise
 		// return an error status code and message
+		String path;
 		if (user == null) {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("Incorrect credentials");
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("errorMsg", "Incorrect username or password");
+			path = "/default.html";
+			templateEngine.process(path, ctx, response.getWriter());
 		} else {
 			request.getSession().setAttribute("user", user);
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().println(usrn);
-			response.getWriter().println(user.getName());
-			response.getWriter().println(user.getSurname());
-			response.getWriter().println(user.getEmail());
-			response.getWriter().println(user.getShipmentaddress());
+			path = getServletContext().getContextPath() + "/GoToHome";
+			response.sendRedirect(path);
 		}
 	}
 	public void destroy() {
