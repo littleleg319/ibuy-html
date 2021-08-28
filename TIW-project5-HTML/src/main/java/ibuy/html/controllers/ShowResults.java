@@ -85,13 +85,15 @@ public class ShowResults extends HttpServlet {
 						response.sendRedirect(path);
 					} else {
 					String path = "/WEB-INF/Results.html";
+					request.getSession().setAttribute("keyword", keyword);
 					ServletContext servletContext = getServletContext();
 					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 					ctx.setVariable("products", prods_list);
 					ctx.setVariable("keyword", keyword);
 					templateEngine.process(path, ctx, response.getWriter());
 					}
-				} else { //ho scelto un prodotto
+				} 
+/*				else { //ho scelto un prodotto
 				Product prod = new Product();
 				List<Supplier> suppliers = new ArrayList<Supplier>();
 				SupplierDAO supp = new SupplierDAO(connection);
@@ -99,35 +101,33 @@ public class ShowResults extends HttpServlet {
 				if (prod == null) {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
 					return;
-				} else {			
-				
-					String path = "/WEB-INF/Results.html";
-					ServletContext servletContext = getServletContext();
-					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-					ctx.setVariable("prod_details", prod);
+				} else {					
 					suppliers = supp.findSupplierDetails(code);
 						if (suppliers == null) {
 							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
 							return;
 						} else {
-							ctx.setVariable("suppl_details", suppliers);
 							prods_list = products.findProductsByKey(keyword); 
 							if (prods_list == null) {
 								response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
 								return;
 							} else {
-							ctx.setVariable("products", prods_list);
-							ctx.setVariable("keyword", keyword);
-							templateEngine.process(path, ctx, response.getWriter());
+								String path = "/WEB-INF/Results.html";
+								ServletContext servletContext = getServletContext();
+								final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+								ctx.setVariable("products", prods_list);
+								ctx.setVariable("prod_details", prod);
+								ctx.setVariable("suppl_details", suppliers);
+								templateEngine.process(path, ctx, response.getWriter());
 							}
 						}			
 				}
-			}
+			}*/
 	}catch (SQLException e) {
 		// TODO Auto-generated catch block
 			e.printStackTrace();
 			//	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-				return;
+			// return;
 			}
 }	
 		

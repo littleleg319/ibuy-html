@@ -8,9 +8,12 @@
 	<h1>Welcome to iBuy </h1>
 <p th:text="${'Hi ' + session.user.name + '!'}"></p>
 <div></div>
-<form class="search_bar" action="ShowResults" method=GET>
+<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+</div>
+<form class="search_bar" th:action="@{/ShowResults}" method=GET>
   <input type="text" placeholder="Insert a keyword..." name="keyword">
-  <button type="submit" value="find"><i class="fa fa-search"></i></button>
+  <button type="submit" value="find"></button>
 </form>
 <div></div>
 <p>Products you recently seen or you may like...</p>

@@ -53,12 +53,13 @@ public class ProductDAO {
 			try (PreparedStatement ps = con.prepareStatement(check);){
 				ps.setString(1, usr);
 				ResultSet res = ps.executeQuery();
-				if (res.isBeforeFirst())
+				if (!res.isBeforeFirst())
 					return null;
 				else {
+					res.next();
 			int s = res.getInt("total");
-			if ( s >= '5') {
-			String query1 = "SELECT code, name FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? LIMIT 5";
+			if (s > 0) {
+			String query1 = "SELECT code, name, description FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? LIMIT 5";
 			try (PreparedStatement pstatement = con.prepareStatement(query1);) {
 				pstatement.setString(1, usr);
 				try (ResultSet result = pstatement.executeQuery();) {
@@ -69,6 +70,7 @@ public class ProductDAO {
 						Product prod = new Product();
 						prod.setCode(result.getString("code"));
 						prod.setName(result.getString("name"));
+						prod.setDescription(result.getString("description"));
 						prods.add(prod);
 						}
 					}
@@ -81,19 +83,20 @@ public class ProductDAO {
 	}
 
 		public int findmissingProd(int userid) throws SQLException {
-			int s = 0;
 			String check = "SELECT count(*) as total FROM user_product  WHERE userid = ?";
+			int s = 0; 
 			try (PreparedStatement ps = con.prepareStatement(check);){
 				String usr = String.valueOf(userid);
 				ps.setString(1, usr);
 				ResultSet res = ps.executeQuery();
-				if (res.isBeforeFirst())
+				if (!res.isBeforeFirst()) {
 					return s;
+					}
 				else {
-						res.getInt("total");
+					res.next();
+					s = res.getInt("total");
 				}
-			}
-			return s;
+			} return s;
 		}
 		
 		public List<Product> findProductsByKey(String key) throws SQLException{
@@ -133,6 +136,7 @@ public class ProductDAO {
 						prod.setCode(res.getString("code"));
 						prod.setName(res.getString("name"));
 						prod.setDescription(res.getString("description"));
+						prod.setCategory(res.getString("category"));
 						Blob tmp = res.getBlob("photo");
 						int photolength = (int) tmp.length();
 						byte[] tmpasbyte = tmp.getBytes(1, photolength);

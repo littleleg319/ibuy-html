@@ -68,7 +68,7 @@ public class GotoHome extends HttpServlet {
 			int myprods = products.findmissingProd(user.getId());
 			if (myprods == 0) {
 				recent_prod = products.findProductsByDefaultCat(myprods);
-				// Redirect to the Home page and add missions to the parameters
+				// Non ho visualizzato oggetti
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
@@ -88,8 +88,8 @@ public class GotoHome extends HttpServlet {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-	//		e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
+				e.printStackTrace();
+		//	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
 			return;
 		}
 	}

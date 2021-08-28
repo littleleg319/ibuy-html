@@ -10,26 +10,28 @@
 <div></div>
 <input type="text" placeholder="Search..">
 <div></div>
+<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+</div>
 <p th:text="'Results for ' + ${keyword}"></p>
 	<table>
 		<thead>
 			<tr>
 				<th>Code</th>
 				<th>Product Name</th>
-				<th>Starting from</th>> 
+				<th>Starting from</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="p : ${products}">
 				<td th:text="${p.code}"></td>
-				<td><a th:href="@{/ShowResults(code=${p.code})}" th:text="${p.name }"></a></td></td>
+				<td><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code})}" th:text="${p.name }"></a></td>
 				<td th:text="${p.price }"></td>
 			</tr>
 		</tbody>
 	</table>
 
-<div th:if="${prod_details != null}">
-	<table>
+	<table th:if="${prod_details != null}">
 		<thead>
 				<p> Product Details </p>
 			<tr>		
@@ -37,17 +39,15 @@
 				<th>Product Name</th>
 				<th>Product Description</th>
 			</tr>
-			<tr>
-			<td th:text="${prod_details.code}"
-				th:if="${not prod_details.isEmpty()}"></td>
-			<td th:text="${prod_details.name}"></td>
-		    <td th:text="${prod_details.description}"></td>
+			<tr th:each="pd : ${prod_details}">
+			<td th:text="${pd.code}"></td>
+			<td th:text="${pd.name}"></td>
+		    <td th:text="${pd.description}"></td>
 			<td> 
-				<img  th:src="@{'data:image/jpeg;base64,'+${prod_details.photo}}"/>
+				<img  th:src="@{'data:image/jpeg;base64,'+ ${pd.photo}}"/>
 			</td>
 			</tr>
 		</thead>
 	</table>
-</div>
 </body>
 </html>

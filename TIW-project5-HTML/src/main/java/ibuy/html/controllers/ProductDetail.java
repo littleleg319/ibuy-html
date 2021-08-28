@@ -63,35 +63,30 @@ public class ProductDetail extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		List<Supplier> suppliers = new ArrayList<Supplier>();
+		List<Product> prods_list = new ArrayList<Product>();
 		ProductDAO products = new ProductDAO(connection);
 		SupplierDAO supp = new SupplierDAO(connection);
 		String product = null;
+		String keyword = null;
 		Product prod = new Product();
 		try { 
 			product = StringEscapeUtils.escapeJava(request.getParameter("code"));
-			if (product == null) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
-				return;
-			} else {
-				prod = products.findProductDetails(product); 
-				if (prod == null) {
-					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
-					return;
-				} else {			
-				String path = "/WEB-INF/Results.html";
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-				ctx.setVariable("prod_details", prod);
-				suppliers = supp.findSupplierDetails(product);
-				if (suppliers == null) {
-					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
-					return;
+			keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
+			prod = products.findProductDetails(product); 					
+			suppliers = supp.findSupplierDetails(product);
+			prods_list = products.findProductsByKey(keyword); 
+				if (prods_list == null || prod == null || suppliers == null) {
+							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
+							return;
 				} else {
-					ctx.setVariable("suppl_details", suppliers);
-					templateEngine.process(path, ctx, response.getWriter());
-				}
-				}
-			}
+							String path = "/WEB-INF/Results.html";
+							ServletContext servletContext = getServletContext();
+							final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+							ctx.setVariable("products", prods_list);
+							ctx.setVariable("prod_details", prod);
+							ctx.setVariable("suppl_details", suppliers);
+							templateEngine.process(path, ctx, response.getWriter());
+							}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//	e.printStackTrace();

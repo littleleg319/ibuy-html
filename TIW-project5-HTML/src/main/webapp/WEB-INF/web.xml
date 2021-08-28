@@ -25,7 +25,8 @@
     <filter-name>LoginChecker</filter-name> 
     <url-pattern>/GoToHome</url-pattern> 
     <url-pattern>/Logout</url-pattern>
-    <url-pattern>/ShowResults</url-pattern>  
+    <url-pattern>/ShowResults</url-pattern> 
+    <url-pattern>/ProductDetail</url-pattern> 
  </filter-mapping> 
   <welcome-file-list>
     <welcome-file>default.html</welcome-file>
