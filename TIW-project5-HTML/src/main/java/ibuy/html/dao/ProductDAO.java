@@ -55,7 +55,7 @@ public class ProductDAO {
 				else {
 			int s = res.getInt("total");
 			if ( s >= '5') {
-			String query1 = "SELECT code, name FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? ";
+			String query1 = "SELECT code, name FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? LIMIT 5";
 			try (PreparedStatement pstatement = con.prepareStatement(query1);) {
 				pstatement.setString(1, usr);
 				try (ResultSet result = pstatement.executeQuery();) {
@@ -115,5 +115,25 @@ public class ProductDAO {
 				}
 			}
 			return prods;
+		}
+		
+		public Product findProductDetails(String productid) throws SQLException{
+			String check = "SELECT * FROM product WHERE code = ?)";
+			Product prod = new Product();
+			try (PreparedStatement ps = con.prepareStatement(check);) {
+				ps.setString(1, productid);
+				ResultSet res = ps.executeQuery();
+				if (!res.isBeforeFirst())
+					return null;
+				else {
+					while(res.next()) {
+						prod.setCode(res.getString("code"));
+						prod.setName(res.getString("name"));
+						prod.setDescription(res.getString("description"));
+						prod.setPhoto(res.getBlob("photo"));
+					}
+				}
+			}
+			return prod;
 		}
 }

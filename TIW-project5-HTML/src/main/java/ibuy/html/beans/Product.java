@@ -1,12 +1,14 @@
 package ibuy.html.beans;
 
+import java.sql.Blob;
+
 public class Product {
 	
 	private String code;
 	private String name;
 	private String description;
 	private String category;
-	private String photo;
+	private Blob photo;
 	private String price;
 	
 	public String getCode() {
@@ -41,12 +43,12 @@ public class Product {
 		this.category = category;
 	}
 
-	public String getPhoto() {
+	public Blob getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto (String photo) {
-		this.photo = photo;
+	public void setPhoto (Blob blob) {
+		this.photo = blob;
 	}
 	
 	public String getPrice() {
