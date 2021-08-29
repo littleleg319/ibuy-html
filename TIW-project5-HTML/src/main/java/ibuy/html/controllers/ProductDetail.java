@@ -20,6 +20,7 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import ibuy.html.beans.PriceRange;
 import ibuy.html.beans.Product;
 import ibuy.html.beans.Supplier;
 import ibuy.html.beans.User;
@@ -64,6 +65,7 @@ public class ProductDetail extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		List<Supplier> suppliers = new ArrayList<Supplier>();
 		List<Product> prods_list = new ArrayList<Product>();
+		List<PriceRange> range = new ArrayList<PriceRange>();
 		ProductDAO products = new ProductDAO(connection);
 		SupplierDAO supp = new SupplierDAO(connection);
 		String product = null;
@@ -74,6 +76,8 @@ public class ProductDetail extends HttpServlet {
 			keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
 			prod = products.findProductDetails(product); 					
 			suppliers = supp.findSupplierDetails(product);
+			int[] supid = supp.findSupplierIds(product);
+			range = supp.findShippingRanges(supid);
 			prods_list = products.findProductsByKey(keyword); 
 				if (keyword == null || prods_list == null || prod == null || suppliers == null) {
 							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
@@ -88,6 +92,7 @@ public class ProductDetail extends HttpServlet {
 							ctx.setVariable("prod_details", prod);
 							ctx.setVariable("suppl_details", suppliers);
 							ctx.setVariable("keyword", keyword);
+							ctx.setVariable("ranges", range);
 							templateEngine.process(path, ctx, response.getWriter());
 							}
 		} catch (SQLException e) {

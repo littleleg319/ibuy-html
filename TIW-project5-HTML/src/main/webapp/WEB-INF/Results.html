@@ -59,18 +59,18 @@
 			<tr th:each="s : ${suppl_details}">
 			<td th:text="${s.name}"></td>
 			<td th:text="${s.rating}"></td>
-			<td th:text="${s.freeshipping}"></td>
 		    <td th:text="${s.prodPrice}"><input type="number" id="quantity" name="Qta" min="10" max="100"><input type="button" name="addToCart" value="Add to Cart"></td>
-		    <td> 
+		    <td th:text="${s.freeshipping}"></td>
+		    <td th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}"> 
 		    	<table>
 		    	<tr>
 		    	<th>Minimum Articles</th>
 		    	<th>Maximum Articles</th>
 		    	<th>Shipping fee</th>
 		    	</tr>
-		    	<tr th:each="r : ${s.range}">
+		    	<tr >
 		    	<td th:text="${r.minArt}"></td>
-				<td th:text="${r.maxArt}"></td>
+				<td th:text="${r.maxArt &gt; 0 ? r.maxArt : '-'}"></td>
 		    	<td th:text="${r.price}"></td>	
 		    	</tr>
 		    	</table> 

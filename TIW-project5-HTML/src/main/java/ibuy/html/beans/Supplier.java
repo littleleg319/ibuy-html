@@ -8,7 +8,7 @@ public class Supplier {
 	private float rating;
 	private float freeshipping;
 	private float prodPrice;
-	private List<PriceRange> range;
+//	private List<PriceRange> range;
 	
 	public int getSupplierId() {
 		return supplierid;
@@ -50,11 +50,11 @@ public class Supplier {
 		this.prodPrice = prodPrice;
 	}
 	
-	public List<PriceRange> getPriceRange() {
+/*	public List<PriceRange> getPriceRange() {
 		return range;
 	}
 
 	public void setPriceRange(List<PriceRange> range) {
 		this.range = range;
-	}
+	}*/
 }
