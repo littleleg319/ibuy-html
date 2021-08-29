@@ -11,9 +11,17 @@
 <div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 </div>
+
+<p>Menu</p>
+<ol>
+  <li><a th:href="@{/GoToHome}">Home Page</a></li>
+  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/ShowCart}">My Shopping Cart</a></li>
+</ol>
+
 <form  th:action="@{/ShowResults}" method="GET">
   <input type="text" placeholder="Insert a keyword..." name="keyword">
-  <button type="submit" value="find"></button>
+  <input type="submit" value="Find">
 </form>
 <div></div>
 <p>Products you recently seen or you may like...</p>

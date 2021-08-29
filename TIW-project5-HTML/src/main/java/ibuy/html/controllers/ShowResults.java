@@ -85,7 +85,7 @@ public class ShowResults extends HttpServlet {
 						response.sendRedirect(path);
 					} else {
 					String path = "/WEB-INF/Results.html";
-					request.getSession().setAttribute("keyword", keyword);
+				//	request.getSession().setAttribute("keyword", keyword);
 					ServletContext servletContext = getServletContext();
 					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 					ctx.setVariable("products", prods_list);

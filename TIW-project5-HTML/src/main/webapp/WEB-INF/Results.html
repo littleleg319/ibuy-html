@@ -11,6 +11,14 @@
 <div align="right">
 		<a th:href="@{/Logout}">Logout</a>
 </div>
+
+<p>Menu</p>
+<ol>
+  <li><a th:href="@{/GoToHome}">Home Page</a></li>
+  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/ShowCart}">My Shopping Cart</a></li>
+</ol>
+
 <p th:text="'Results for ' + ${keyword}"></p>
 	<table>
 		<thead>
@@ -71,6 +79,7 @@
 		    <input type="hidden" name="supplierid" th:value="${s.supplierid}">
 		    <input type="hidden" name="price" th:value="${s.prodPrice}">
 		    <input type="hidden" name="freeship" th:value="${s.freeshipping}">
+		    <input type="hidden" name="suppl_name" th:value="${s.name}">
 		    </form></td>
 		    <td> 
 		    	<table>
@@ -81,7 +90,7 @@
 		    	</tr>
 		    	<tr th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}">
 		    	<td th:text="${r.minArt}"></td>
-				<td th:text="${r.maxArt &eq; 9999999 ? '-' : r.maxArt}"></td>
+				<td th:text="${r.maxArt == 9999999 ? '-' : r.maxArt}"></td>
 		    	<td th:text="${r.price}">
 		    	</td>	
 		    	</tr>
