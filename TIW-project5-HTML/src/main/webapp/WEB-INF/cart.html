@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>iBuy Shopping Center</title>
+</head>
+<body>
+	<h1>Welcome to iBuy </h1>
+<p th:text="${'Hi ' + session.user.name + '!'}"></p>
+<div></div>
+<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+		
+		
+</body>
+</html>

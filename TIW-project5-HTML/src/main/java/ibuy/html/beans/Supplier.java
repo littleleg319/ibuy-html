@@ -1,14 +1,11 @@
 package ibuy.html.beans;
 
-import java.util.List;
-
 public class Supplier {
 	private int supplierid;
 	private String name;
 	private float rating;
 	private float freeshipping;
 	private float prodPrice;
-//	private List<PriceRange> range;
 	
 	public int getSupplierId() {
 		return supplierid;
@@ -50,11 +47,4 @@ public class Supplier {
 		this.prodPrice = prodPrice;
 	}
 	
-/*	public List<PriceRange> getPriceRange() {
-		return range;
-	}
-
-	public void setPriceRange(List<PriceRange> range) {
-		this.range = range;
-	}*/
 }

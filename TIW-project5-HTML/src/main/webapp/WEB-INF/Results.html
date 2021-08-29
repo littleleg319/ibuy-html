@@ -54,24 +54,36 @@
 				<th> Rating </th>
 				<th> Price </th>
 				<th> Free Shipping starting from </th>
+				<th>Quantity</th>
 				<th> Shipping cost Details </th>
 			</tr>
 			<tr th:each="s : ${suppl_details}">
 			<td th:text="${s.name}"></td>
 			<td th:text="${s.rating}"></td>
-		    <td th:text="${s.prodPrice}"><input type="number" id="quantity" name="Qta" min="10" max="100"><input type="button" name="addToCart" value="Add to Cart"></td>
+		    <td th:text="${s.prodPrice}">
+		    </td>
 		    <td th:text="${s.freeshipping}"></td>
-		    <td th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}"> 
+		    <td>
+		    <form th:action="@{/AddToCart}" method="POST">
+		    <input type="number" name="qta">
+		    <input type="submit" name="addtocart" value="Add to Cart!">
+		    <input type="hidden" name="productid" th:value="${param.code}">
+		    <input type="hidden" name="supplierid" th:value="${s.supplierid}">
+		    <input type="hidden" name="price" th:value="${s.prodPrice}">
+		    <input type="hidden" name="freeship" th:value="${s.freeshipping}">
+		    </form></td>
+		    <td> 
 		    	<table>
 		    	<tr>
 		    	<th>Minimum Articles</th>
 		    	<th>Maximum Articles</th>
 		    	<th>Shipping fee</th>
 		    	</tr>
-		    	<tr >
+		    	<tr th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}">
 		    	<td th:text="${r.minArt}"></td>
-				<td th:text="${r.maxArt &gt; 0 ? r.maxArt : '-'}"></td>
-		    	<td th:text="${r.price}"></td>	
+				<td th:text="${r.maxArt &eq; 9999999 ? '-' : r.maxArt}"></td>
+		    	<td th:text="${r.price}">
+		    	</td>	
 		    	</tr>
 		    	</table> 
 		    </td>

@@ -100,4 +100,24 @@ public class SupplierDAO {
 		}
 		return ids;
 	}
+	
+		public float CalculateShippingCost(int products, int supplierId) throws SQLException {
+			float cost=0;
+			String query = "SELECT price FROM pricerange WHERE supplierid = ? AND minart <= ? AND maxart >= ?";
+			try (PreparedStatement ps = con.prepareStatement(query);) {
+				ps.setString(1,String.valueOf(supplierId));
+				ps.setString(2,String.valueOf(products));
+				ps.setString(3, String.valueOf(products));
+				ResultSet res = ps.executeQuery();
+				if (!res.isBeforeFirst())
+					return 0;
+				else {
+					while(res.next()) {
+						cost=(res.getFloat("price"));
+						return cost;
+					}
+				}
+			}
+			return cost;
+		}
 }
