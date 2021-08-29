@@ -40,33 +40,6 @@ public class UserDAO {
 		}
 	}
 	
-	public void UpdateProductSeen(String userid, String productId)  {
-		String query = "SELECT  * FROM user_product  WHERE userid = ? AND productid =?";
-		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			pstatement.setString(1, userid);
-			pstatement.setString(2, productId);
-			try (ResultSet result = pstatement.executeQuery();) {
-				if (!result.isBeforeFirst()) { // no results, insert new value
-					String insert_seen = "INSERT INTO user_product (userid, productid, timestamp) VALUES (?, ?, CURDATE())";
-					PreparedStatement ps = con.prepareStatement(insert_seen);
-					ps.setString(1,userid);
-					ps.setString(2, productId);
-					ps.executeUpdate();
-					} else {
-					String update_seen = "UPDATE user_product SET timestamp=CURDATE() WHERE userid = ? AND productid = ?";
-					PreparedStatement ps = con.prepareStatement(update_seen);
-					ps.setString(1,userid);
-					ps.setString(2, productId);
-					ps.executeUpdate();
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
+	
 	
 }

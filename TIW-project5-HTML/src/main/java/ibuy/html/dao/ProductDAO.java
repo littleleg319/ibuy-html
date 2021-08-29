@@ -62,7 +62,7 @@ public class ProductDAO {
 					res.next();
 			int s = res.getInt("total");
 			if (s > 0) {
-			String query1 = "SELECT code, name, description FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? LIMIT 5";
+			String query1 = "SELECT code, name, description FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? ORDER BY timestamp DESC LIMIT 5";
 			try (PreparedStatement pstatement = con.prepareStatement(query1);) {
 				pstatement.setString(1, usr);
 				try (ResultSet result = pstatement.executeQuery();) {
@@ -149,5 +149,34 @@ public class ProductDAO {
 				}
 			}
 			return prod;
+		}
+		public void UpdateProductSeen(int userid, String productId)  {
+			String usr = String.valueOf(userid);
+			String query = "SELECT  * FROM user_product  WHERE userid = ? AND productid =?";
+			try (PreparedStatement pstatement = con.prepareStatement(query);) {
+				pstatement.setString(1, usr);
+				pstatement.setString(2, productId);
+				try (ResultSet result = pstatement.executeQuery();) {
+					if (!result.isBeforeFirst()) { // no results, insert new value
+						String insert_seen = "INSERT INTO user_product (userid, productid, timestamp) VALUES (?, ?, NOW())";
+						PreparedStatement ps = con.prepareStatement(insert_seen);
+						ps.setString(1, usr);
+						ps.setString(2, productId);
+						ps.executeUpdate();
+						} else {
+						String update_seen = "UPDATE user_product SET timestamp=NOW() WHERE userid = ? AND productid = ?";
+						PreparedStatement ps = con.prepareStatement(update_seen);
+						ps.setString(1, usr);
+						ps.setString(2, productId);
+						ps.executeUpdate();
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 }

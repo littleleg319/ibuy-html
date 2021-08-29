@@ -26,11 +26,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="p : ${products}">
+			<tr th:if="${products != null}" th:each="p : ${products}">
 				<td th:text="${p.name}"></td>
 				<td th:text="${p.description }"></td>
 			</tr>
-			<tr th:each="d : ${default_prods}">
+			<tr th:if="${default_prods != null}" th:each="d : ${default_prods}">
 				<td th:text="${d.name}"></td>
 				<td th:text="${d.description }"></td>
 			</tr>

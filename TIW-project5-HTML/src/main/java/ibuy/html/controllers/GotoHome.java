@@ -66,16 +66,7 @@ public class GotoHome extends HttpServlet {
 		ProductDAO products = new ProductDAO(connection);
 		try {
 			int myprods = products.findmissingProd(user.getId());
-			if (myprods == 0) {
-				recent_prod = products.findProductsByDefaultCat(myprods,user.getId());
-				// Non ho visualizzato oggetti
-				String path = "/WEB-INF/Home.html";
-				ServletContext servletContext = getServletContext();
-				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-				ctx.setVariable("products", recent_prod);
-				templateEngine.process(path, ctx, response.getWriter());
-			}
-			else {
+			if (myprods < 5 ) { //ho visto meno di 5 oggetti
 				recent_prod = products.findLastProductByUser(user.getId());
 				List<Product> default_prod = new ArrayList<Product>();
 				default_prod = products.findProductsByDefaultCat(myprods,user.getId());
@@ -84,6 +75,14 @@ public class GotoHome extends HttpServlet {
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 				ctx.setVariable("products", recent_prod);
 				ctx.setVariable("default_prods",default_prod);
+				templateEngine.process(path, ctx, response.getWriter());
+			}
+			else {
+				recent_prod = products.findLastProductByUser(user.getId());
+				String path = "/WEB-INF/Home.html";
+				ServletContext servletContext = getServletContext();
+				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				ctx.setVariable("products", recent_prod);
 				templateEngine.process(path, ctx, response.getWriter());
 			}
 		} catch (SQLException e) {

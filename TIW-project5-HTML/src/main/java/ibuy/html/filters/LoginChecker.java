@@ -52,6 +52,7 @@ public class LoginChecker implements Filter {
 		if (s.isNew() || s.getAttribute("user") == null) {
 			res.setStatus(403);
 			res.setHeader("Location", loginpath);
+			res.sendRedirect(loginpath);
 			System.out.print("Login checker FAILED...\n");
 			return;
 			}

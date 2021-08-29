@@ -78,7 +78,8 @@ public class ProductDetail extends HttpServlet {
 				if (keyword == null || prods_list == null || prod == null || suppliers == null) {
 							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
 							return;
-				} else {
+				} else {	
+							products.UpdateProductSeen(user.getId(),product);
 							String path = "/WEB-INF/Results.html";
 							ServletContext servletContext = getServletContext();
 							final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
