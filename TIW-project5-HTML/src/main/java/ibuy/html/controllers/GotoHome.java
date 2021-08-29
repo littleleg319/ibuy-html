@@ -67,7 +67,7 @@ public class GotoHome extends HttpServlet {
 		try {
 			int myprods = products.findmissingProd(user.getId());
 			if (myprods == 0) {
-				recent_prod = products.findProductsByDefaultCat(myprods);
+				recent_prod = products.findProductsByDefaultCat(myprods,user.getId());
 				// Non ho visualizzato oggetti
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
@@ -78,7 +78,7 @@ public class GotoHome extends HttpServlet {
 			else {
 				recent_prod = products.findLastProductByUser(user.getId());
 				List<Product> default_prod = new ArrayList<Product>();
-				default_prod = products.findProductsByDefaultCat(myprods);
+				default_prod = products.findProductsByDefaultCat(myprods,user.getId());
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

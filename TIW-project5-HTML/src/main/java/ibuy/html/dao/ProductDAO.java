@@ -19,15 +19,18 @@ public class ProductDAO {
 	public ProductDAO(Connection connection) {
 		this.con = connection;
 	}
-		public List<Product> findProductsByDefaultCat (int missing) throws SQLException {
+		public List<Product> findProductsByDefaultCat (int missing, int userid) throws SQLException {
 			int number = 5 - missing;
 			List<Product> prods = new ArrayList<Product>();
 			String value = String.valueOf(number);
-			String query = "SELECT * FROM product  WHERE category = ? ORDER BY rand() limit 0,?";
+			String usr = String.valueOf(userid);
+	//		String query = "SELECT * FROM product  WHERE category = ? ORDER BY rand() limit 0,?";
+			String query = "SELECT * FROM product as p WHERE category = ? AND NOT EXISTS (SELECT code FROM product as m INNER JOIN user_product as u ON m.code = u.productid  WHERE u.userid = ? AND m.code = p.code)ORDER BY rand() limit 0,?";
 			String category = "Gym Equipment";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
 				pstatement.setString(1, category);
-				pstatement.setInt(2, number);
+				pstatement.setString(2, usr);
+				pstatement.setInt(3, number);
 				try (ResultSet result = pstatement.executeQuery();) {
 					if (!result.isBeforeFirst()) // no results. Something wrong
 						return null;

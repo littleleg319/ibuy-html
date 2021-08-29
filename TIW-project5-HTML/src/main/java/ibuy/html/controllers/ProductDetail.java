@@ -75,16 +75,18 @@ public class ProductDetail extends HttpServlet {
 			prod = products.findProductDetails(product); 					
 			suppliers = supp.findSupplierDetails(product);
 			prods_list = products.findProductsByKey(keyword); 
-				if (prods_list == null || prod == null || suppliers == null) {
+				if (keyword == null || prods_list == null || prod == null || suppliers == null) {
 							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
 							return;
 				} else {
 							String path = "/WEB-INF/Results.html";
 							ServletContext servletContext = getServletContext();
 							final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+							request.getSession().setAttribute("keyword", keyword);
 							ctx.setVariable("products", prods_list);
 							ctx.setVariable("prod_details", prod);
 							ctx.setVariable("suppl_details", suppliers);
+							ctx.setVariable("keyword", keyword);
 							templateEngine.process(path, ctx, response.getWriter());
 							}
 		} catch (SQLException e) {
