@@ -87,7 +87,7 @@ public class ProductDetail extends HttpServlet {
 							String path = "/WEB-INF/Results.html";
 							ServletContext servletContext = getServletContext();
 							final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-							request.getSession().setAttribute("keyword", keyword);
+						//	request.getSession().setAttribute("keyword", keyword);
 							ctx.setVariable("products", prods_list);
 							ctx.setVariable("prod_details", prod);
 							ctx.setVariable("suppl_details", suppliers);

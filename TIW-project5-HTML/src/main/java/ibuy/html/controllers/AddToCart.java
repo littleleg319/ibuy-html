@@ -49,7 +49,7 @@ public class AddToCart extends HttpServlet {
 		templateResolver.setTemplateMode(TemplateMode.HTML);
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
-		templateResolver.setSuffix(".html");
+		//templateResolver.setSuffix(".html");
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 	/**
@@ -66,7 +66,7 @@ public class AddToCart extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		//parametri del bean Cart
+		//Dichiarazione Parametri
 		Integer suppid = null;
 		String prodid = null;
 		String suppl_name = null;
@@ -76,7 +76,12 @@ public class AddToCart extends HttpServlet {
 		Float fee = (float) 0.0;
 		Float freeship = (float) 0.0;
 		List<CartItem> items = new ArrayList<CartItem>();
+		List<Cart> cart_items = new ArrayList<Cart>();
+		SupplierDAO range = new SupplierDAO(connection);
 		Integer articles = 0;
+		ProductDAO prodotto = new ProductDAO(connection);
+		String prod_name = null;
+		String keyword = null;
 		
 		//retrieve dalla richiesta dei parametri
 		suppid=	Integer.parseInt(request.getParameter("supplierid"));
@@ -84,16 +89,20 @@ public class AddToCart extends HttpServlet {
 		prodid=StringEscapeUtils.escapeJava(request.getParameter("productid"));
 		freeship=Float.parseFloat(request.getParameter("freeship"));
 		suppl_name=StringEscapeUtils.escapeJava(request.getParameter("suppl_name"));
+		keyword=StringEscapeUtils.escapeJava(request.getParameter("keyword"));
 		try {
 			qta=Integer.parseInt(request.getParameter("qta"));
+			if (qta == null || qta <= 0) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
+				return;
+		} 
 		} catch (NumberFormatException | NullPointerException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect qta values");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
 			return;
 		}
 		
+		
 		//cerco il nome dell'elemento
-		ProductDAO prodotto = new ProductDAO(connection);
-		String prod_name = null;
 		try {
 			prod_name = prodotto.findProductDetails(prodid).getName();
 		} catch (SQLException e1) {
@@ -104,10 +113,10 @@ public class AddToCart extends HttpServlet {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession s = req.getSession();
-		List<Cart> cart_items = new ArrayList<Cart>();
-		SupplierDAO range = new SupplierDAO(connection);
+
 		
-		if(s.getAttribute("cart") == null) { //non ho oggetti nel carrello
+		//non ho oggetti nel carrello
+		if(s.getAttribute("cart") == null) { 
 			totalPrice=qta*price;
 			try {
 				if(totalPrice < freeship)
@@ -135,13 +144,14 @@ public class AddToCart extends HttpServlet {
 			cart.setItem(items);
 			cart.setName(suppl_name);
 			cart_items.add(cart);
-		} else {
+		} else { 
+			// un carrello già esiste
 			cart_items= (List<Cart>) s.getAttribute("cart");
 			items = (List<CartItem>) s.getAttribute("items");
 			boolean incart = false;
 			boolean initem = false;
-			Cart delta = new Cart();
 			
+			// verifico se ho un carrello per lo stesso fornitore e prodotto o no
 			for (Cart c : cart_items) {
 				if (c.getSupplierId() == suppid) {
 					for (CartItem n : c.getItem()) {
@@ -153,28 +163,36 @@ public class AddToCart extends HttpServlet {
 					}
 				}
 			//ho già l'articolo nel carrello di quel fornitore nel carrello
+			//quindi aggiorno solo la Quantità
 			if (initem && incart) {
 						for (CartItem cm : items) {
 							if(cm.getSupplierId()==suppid) {
 								if (cm.getProductId().equals(prodid)) {
-									cm.setQta(qta);
+									cm.setQta(cm.getQta()+qta);
 							}
 					} 
 				}
-			} else if (incart && !initem) { //ho articoli del fornitore, ma non questo articolo
-					for (Cart ci: cart_items) {
+			}	
+			//ho articoli del fornitore, ma non questo articolo 
+			else if (incart && !initem) { 
+					for (Cart ci: cart_items) { 
 						if (ci.getSupplierId()==suppid) {
+							//cerco il carrello del fornitore e aggiungo l'item 
+							//di questo articolo
 							CartItem add = new CartItem();
 							add.setName(prod_name);
 							add.setPrice(price);
 							add.setProductId(prodid);
 							add.setQta(qta);
 							add.setSupplierId(suppid);
-							ci.getItem().add(add);
 							items.add(add);
 							}	
 						}
-					} else {
+					} 
+			//ho un carrello, ma non per questo fornitore
+			else if(!incart && !initem) {
+				//creo l'item per l'oggetto e lo aggiungo agli items nel mio 
+				//carrello complessivo
 				CartItem item1 = new CartItem();
 				item1.setProductId(prodid);
 				item1.setQta(qta);
@@ -182,16 +200,18 @@ public class AddToCart extends HttpServlet {
 				item1.setName(prod_name);
 				item1.setSupplierId(suppid);
 				items.add(item1);
-
+				//creo il carrello per questo fornitore e lo aggiungo al carrello
+				//complessivo
 				Cart cart1 = new Cart();
 				cart1.setSupplierId(suppid);
 				cart1.setFee(fee);
 				cart1.setTotalCost(totalPrice);		
 				cart1.setItem(items);
 				cart1.setName(suppl_name);
+				cart1.setTotalQta(qta);
 				cart_items.add(cart1);
 			}
-			
+			//aggiornati i dati nei carrelli, aggiorno/calcolo i prezzi totali e le spese di spedizione
 			for (Cart c2 : cart_items) {
 				for (CartItem c3 : c2.getItem()) {
 					articles=articles+c3.getQta();
@@ -211,6 +231,7 @@ public class AddToCart extends HttpServlet {
 				fee = freeship;
 				c2.setFee(fee);
 				c2.setTotalCost(totalPrice);
+				c2.setTotalQta(articles);
 			}
 		}
 	}
@@ -219,7 +240,6 @@ public class AddToCart extends HttpServlet {
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 		request.getSession().setAttribute("cart", cart_items);
 		request.getSession().setAttribute("items", items);
-	//	response.sendRedirect(path);
 		templateEngine.process(path, ctx, response.getWriter());
 }
 		

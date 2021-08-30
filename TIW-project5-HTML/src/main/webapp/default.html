@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>iBuy Shopping Center</title>
@@ -12,7 +12,7 @@
 		Username: <input type="text" name="username" required> <br>
 		Password: <input type="password" name="pwd" required><br>
 		<input type="submit" value="login">
-		<p th:text=" ${errorMsg}"></p>
 	</form>
+		<p th:text="${errorMsg}"></p>
 </body>
 </html>

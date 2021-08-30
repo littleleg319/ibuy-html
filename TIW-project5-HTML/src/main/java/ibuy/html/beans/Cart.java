@@ -7,6 +7,7 @@ public class Cart {
 	private List<CartItem> item;
 	private float fee;
 	private float totalCost;
+	private int totalQta;
 	private String name;
 	
 	public int getSupplierId() {
@@ -47,5 +48,13 @@ public class Cart {
 	
 	public void setName(String name) {
 		this.name=name;
+	}
+	
+	public int getTotalQta() {
+		return totalQta;
+	}
+
+	public void setTotalQta(int totalQta) {
+		this.totalQta = totalQta;
 	}
 }

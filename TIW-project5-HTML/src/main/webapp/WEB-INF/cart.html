@@ -37,10 +37,13 @@
 		    	<tr>
 		    	<th>Product Code</th>
 		    	<th>Product Name</th>
+		    	<th>Qta</th>
 		    	</tr>
 		    	<tr th:each="i : ${session.items}" th:if="${i.supplierid} == ${c.supplierid}">
 		    	<td th:text="${i.productid}"></td>
 		    	<td th:text="${i.name}">
+		    	<td th:text="${i.qta}">
+		    	<p th:text=" ${errorMsg}"></p>
 		    	</td>	
 		    	</tr>
 		    	</table> 
