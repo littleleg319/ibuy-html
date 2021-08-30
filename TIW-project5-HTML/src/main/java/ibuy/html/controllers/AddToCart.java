@@ -122,7 +122,7 @@ public class AddToCart extends HttpServlet {
 				if(totalPrice < freeship)
 				fee=range.CalculateShippingCost(qta, suppid);
 				else 
-					fee = freeship;
+					fee = (float) 0;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -236,7 +236,7 @@ public class AddToCart extends HttpServlet {
 														e.printStackTrace();
 														}
 							} else {
-								fee = c2.getFreeShip();
+								fee = (float) 0;
 								c2.setFee(fee);
 								}
 						}
