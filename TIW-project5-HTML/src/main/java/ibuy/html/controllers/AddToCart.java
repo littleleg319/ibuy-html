@@ -141,8 +141,10 @@ public class AddToCart extends HttpServlet {
 			cart.setSupplierId(suppid);
 			cart.setFee(fee);
 			cart.setTotalCost(totalPrice);		
-			cart.setItem(items);
+		//	cart.setItem(items);
 			cart.setName(suppl_name);
+			cart.setTotalQta(qta);
+			cart.setFreeShip(freeship);
 			cart_items.add(cart);
 		} else { 
 			// un carrello già esiste
@@ -154,8 +156,8 @@ public class AddToCart extends HttpServlet {
 			// verifico se ho un carrello per lo stesso fornitore e prodotto o no
 			for (Cart c : cart_items) {
 				if (c.getSupplierId() == suppid) {
-					for (CartItem n : c.getItem()) {
-							if (n.getProductId().equals(prodid)) {
+					for (CartItem n : items) {
+							if ((n.getProductId().equals(prodid))&&(n.getSupplierId()==c.getSupplierId())) {
 								initem = true;
 							}
 						}
@@ -186,6 +188,7 @@ public class AddToCart extends HttpServlet {
 							add.setQta(qta);
 							add.setSupplierId(suppid);
 							items.add(add);
+							ci.setTotalQta(ci.getTotalQta()+qta);
 							}	
 						}
 					} 
@@ -194,11 +197,13 @@ public class AddToCart extends HttpServlet {
 				//creo l'item per l'oggetto e lo aggiungo agli items nel mio 
 				//carrello complessivo
 				CartItem item1 = new CartItem();
+			//	List<CartItem> newlist = new ArrayList<CartItem>();
 				item1.setProductId(prodid);
 				item1.setQta(qta);
 				item1.setPrice(price);
 				item1.setName(prod_name);
 				item1.setSupplierId(suppid);
+			//	newlist.add(item1);
 				items.add(item1);
 				//creo il carrello per questo fornitore e lo aggiungo al carrello
 				//complessivo
@@ -206,35 +211,38 @@ public class AddToCart extends HttpServlet {
 				cart1.setSupplierId(suppid);
 				cart1.setFee(fee);
 				cart1.setTotalCost(totalPrice);		
-				cart1.setItem(items);
+			//	cart1.setItem(newlist);
 				cart1.setName(suppl_name);
 				cart1.setTotalQta(qta);
+				cart1.setFreeShip(freeship);
 				cart_items.add(cart1);
 			}
 			//aggiornati i dati nei carrelli, aggiorno/calcolo i prezzi totali e le spese di spedizione
 			for (Cart c2 : cart_items) {
-				for (CartItem c3 : c2.getItem()) {
+				articles = 0;
+				totalPrice = (float) 0;
+				for (CartItem c3 : items) {
+					if (c2.getSupplierId()==c3.getSupplierId()) {
 					articles=articles+c3.getQta();
 					totalPrice= totalPrice + (c3.getQta()*c3.getPrice());
-				}
-				if (totalPrice < freeship) {
-					try {
-						fee=range.CalculateShippingCost(articles, suppid);
-						c2.setFee(fee);
-						c2.setTotalCost(totalPrice);
-						
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					c2.setTotalCost(totalPrice);
+					c2.setTotalQta(articles);
+							if (totalPrice < c2.getFreeShip()) {
+										try {
+												fee=range.CalculateShippingCost(articles, suppid);
+												c2.setFee(fee);
+												} catch (SQLException e) {
+														// TODO Auto-generated catch block
+														e.printStackTrace();
+														}
+							} else {
+								fee = c2.getFreeShip();
+								c2.setFee(fee);
+								}
+						}
 					}
-			} else {
-				fee = freeship;
-				c2.setFee(fee);
-				c2.setTotalCost(totalPrice);
-				c2.setTotalQta(articles);
 			}
 		}
-	}
 		String path = "/WEB-INF/cart.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());

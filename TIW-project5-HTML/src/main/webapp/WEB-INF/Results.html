@@ -55,22 +55,22 @@
 			</tr>
 		</thead>
 		<table th:if="${suppl_details != null}">
-		<thead>
+		<thead th:each="s : ${suppl_details}">
 				<p> Sold By </p>
 			<tr>		
-				<th> Supplier Name </th>
+				<th> Seller Name </th>
 				<th> Rating </th>
 				<th> Price </th>
 				<th> Free Shipping starting from </th>
-				<th>Quantity</th>
+				<th> Quantity</th>
 				<th> Shipping cost Details </th>
 			</tr>
-			<tr th:each="s : ${suppl_details}">
+			<tr>
 			<td th:text="${s.name}"></td>
 			<td th:text="${s.rating}"></td>
-		    <td th:text="${s.prodPrice}">
+		    <td th:text="${s.prodPrice}">€
 		    </td>
-		    <td th:text="${s.freeshipping}"></td>
+		    <td th:text="${s.freeshipping}">€</td>
 		    <td>
 		    <form th:action="@{/AddToCart}" method="POST">
 		    <input type="number" name="qta">
@@ -92,11 +92,24 @@
 		    	<tr th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}">
 		    	<td th:text="${r.minArt}"></td>
 				<td th:text="${r.maxArt == 9999999 ? '-' : r.maxArt}"></td>
-		    	<td th:text="${r.price}">
+		    	<td th:text="${r.price}">€
 		    	</td>	
 		    	</tr>
 		    	</table> 
 		    </td>
+		    <td>
+		    <table th:each="c : ${session.cart}" >
+		    	<tr th:if="${s.supplierid} == ${c.supplierid}" >
+		    	<th>Number of Items of this Seller in your Cart</th>
+		    	<th>Total Cost in Cart fro this Seller</th>
+		    	</tr>
+		    	<tr>
+		    	<td th:text="${c.totalQta}"></td>
+				<td th:text="${c.totalCost}">€</td>
+		    	</td>	
+		    	</tr>
+		    </table> 
+		    </td>  
 			</tr>
 		</thead>
 	</table>

@@ -4,11 +4,12 @@ import java.util.List;
 
 public class Cart {
 	private int supplierid;
-	private List<CartItem> item;
+//	private List<CartItem> item;
 	private float fee;
 	private float totalCost;
 	private int totalQta;
 	private String name;
+	private float freeship;
 	
 	public int getSupplierId() {
 		return supplierid;
@@ -18,13 +19,13 @@ public class Cart {
 		this.supplierid = supplierid;
 	}
 	
-	public List<CartItem> getItem() {
+	/*	public List<CartItem> getItem() {
 		return item;
 	}
 
 	public void setItem(List<CartItem> item) {
-		this.item = item;
-	}
+		this.item = item; 
+	} */
 	
 	public float getFee() {
 		return fee;
@@ -56,5 +57,13 @@ public class Cart {
 
 	public void setTotalQta(int totalQta) {
 		this.totalQta = totalQta;
+	}
+	
+	public void setFreeShip(float freeship) {
+		this.freeship = freeship;
+	}
+	
+	public float getFreeShip() {
+		return freeship;
 	}
 }
