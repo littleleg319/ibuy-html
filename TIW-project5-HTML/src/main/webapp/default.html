@@ -3,16 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>iBuy Shopping Center</title>
+<link rel="stylesheet" type="text/css" media="all" href="./css/mystyle.css" th:href="@{/css/mystyle.css}"/>
 </head>
 <body>
 
-<h1>Welcome to iBuy </h1>
+<h1> <img src="./img/Logo.png" class="center"></h1>
 
+<div class="login">
 	<form action="CheckLogin" method="POST">
-		Username: <input type="text" name="username" required> <br>
-		Password: <input type="password" name="pwd" required><br>
-		<input type="submit" value="login">
+		<label class="a">Username</label><br>
+		<input type="text" name="username" placeholder="Your Username..." class="form" required> <br>
+		<label class="a">Password</label><br>
+		<input type="password" name="pwd" placeholder="Your Password..." class="form" required><br>
+		<input type="submit" value="Login" class="submit">
 	</form>
 		<p th:text="${errorMsg}"></p>
+</div>
 </body>
 </html>

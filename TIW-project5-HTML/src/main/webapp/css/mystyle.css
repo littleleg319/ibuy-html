@@ -1,0 +1,157 @@
+body {
+	background-color:rgb(241, 241, 241);
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.pages {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+.form{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  display: inline-block;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.submit {
+  width: 50%;
+  background-color: #2492ff;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font:bold 20px Verdana, sans-serif ;
+}
+
+input[type=submit]:hover {
+  background-color: #ff4040;
+}
+
+.login {
+	margin: 0 auto;
+  width: 500px;
+  border-radius: 5px;
+  background-color: #dddddd;
+  padding: 20px;
+  text-align: center;
+}
+
+.a {
+	font:bold 15px Verdana, sans-serif ;
+}
+
+.welcome {
+	text-align:center;
+	color: black;
+	padding: 14px 16px;
+  	text-decoration: none;
+  	display: block;
+  	margin-left: 450px;
+    margin-right: 450px;
+    text-shadow: 1px 1px 1px black;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e7e7e7;
+  background-color: #f3f3f3;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: #666;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+li a.active {
+  color: white;
+  background-color: #6083CB;
+}
+
+.logout {
+  color: white;
+  background-color: #000000;
+  border-right:none;
+  float:right;
+}
+
+.keyword{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  display: inline-block;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.search {
+  width: 5%;
+  background-color: #2492ff;
+  color: white;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font: bold Verdana, sans-serif ;
+}
+table {
+  border-collapse: collapse;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th,td {
+	  text-align: left;
+  	  padding: 8px;
+}
+
+tr:nth-child(odd){
+	background-color: white;
+	}
+
+th {
+  background-color: #6083CB;
+  color: white;
+  width: 200px;
+}
+
+.text {
+	text-align:center;
+	font:bold 20px Verdana, sans-serif ;
+}
