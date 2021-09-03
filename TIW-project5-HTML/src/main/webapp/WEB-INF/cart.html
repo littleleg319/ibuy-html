@@ -53,7 +53,7 @@
 				<td>
 				<form th:action="@{/CreateOrder}" method="POST">
 		    	<input type="submit" name="checkout" value="Checkout!">
-		    	<input type="hidden" name="supplierid" value="${c.supplierid}">
+		    	<input type="hidden" name="supplierid" th:value="${c.supplierid}">
 		    	</form>
 				</td>
 			</tr>

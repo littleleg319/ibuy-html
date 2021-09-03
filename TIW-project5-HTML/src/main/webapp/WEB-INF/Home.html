@@ -19,6 +19,8 @@
   <li><a th:href="@{/ShowCart}">My Shopping Cart</a></li>
 </ol>
 
+<div th:text="${MessageOk}"></div>
+
 <form  th:action="@{/ShowResults}" method="GET">
   <input type="text" placeholder="Insert a keyword..." name="keyword">
   <input type="submit" value="Find">

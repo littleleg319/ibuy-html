@@ -24,7 +24,6 @@ public class ProductDAO {
 			List<Product> prods = new ArrayList<Product>();
 			String value = String.valueOf(number);
 			String usr = String.valueOf(userid);
-	//		String query = "SELECT * FROM product  WHERE category = ? ORDER BY rand() limit 0,?";
 			String query = "SELECT * FROM product as p WHERE category = ? AND NOT EXISTS (SELECT code FROM product as m INNER JOIN user_product as u ON m.code = u.productid  WHERE u.userid = ? AND m.code = p.code)ORDER BY rand() limit 0,?";
 			String category = "Gym Equipment";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
@@ -150,6 +149,7 @@ public class ProductDAO {
 			}
 			return prod;
 		}
+		
 		public void UpdateProductSeen(int userid, String productId)  {
 			String usr = String.valueOf(userid);
 			String query = "SELECT  * FROM user_product  WHERE userid = ? AND productid =?";
@@ -179,4 +179,6 @@ public class ProductDAO {
 				e1.printStackTrace();
 			}
 		}
+		
+		
 }

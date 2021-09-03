@@ -42,14 +42,14 @@ public class AddToCart extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-    //inizializzazione context
+    //inizializzazione context e connessione
     public void init() throws ServletException {
 		ServletContext servletContext = getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
 		templateResolver.setTemplateMode(TemplateMode.HTML);
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
-		//templateResolver.setSuffix(".html");
+		templateResolver.setSuffix(".html");
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 	/**
@@ -116,7 +116,7 @@ public class AddToCart extends HttpServlet {
 
 		
 		//non ho oggetti nel carrello
-		if(s.getAttribute("cart") == null) { 
+		if(s.getAttribute("cart") == null || s.getAttribute("items") == null) { 
 			totalPrice=qta*price;
 			try {
 				if(totalPrice < freeship)
@@ -141,7 +141,6 @@ public class AddToCart extends HttpServlet {
 			cart.setSupplierId(suppid);
 			cart.setFee(fee);
 			cart.setTotalCost(totalPrice);		
-		//	cart.setItem(items);
 			cart.setName(suppl_name);
 			cart.setTotalQta(qta);
 			cart.setFreeShip(freeship);
@@ -197,13 +196,11 @@ public class AddToCart extends HttpServlet {
 				//creo l'item per l'oggetto e lo aggiungo agli items nel mio 
 				//carrello complessivo
 				CartItem item1 = new CartItem();
-			//	List<CartItem> newlist = new ArrayList<CartItem>();
 				item1.setProductId(prodid);
 				item1.setQta(qta);
 				item1.setPrice(price);
 				item1.setName(prod_name);
 				item1.setSupplierId(suppid);
-			//	newlist.add(item1);
 				items.add(item1);
 				//creo il carrello per questo fornitore e lo aggiungo al carrello
 				//complessivo
@@ -211,7 +208,6 @@ public class AddToCart extends HttpServlet {
 				cart1.setSupplierId(suppid);
 				cart1.setFee(fee);
 				cart1.setTotalCost(totalPrice);		
-			//	cart1.setItem(newlist);
 				cart1.setName(suppl_name);
 				cart1.setTotalQta(qta);
 				cart1.setFreeShip(freeship);
