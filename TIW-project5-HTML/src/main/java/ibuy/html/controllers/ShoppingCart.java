@@ -22,15 +22,16 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import ibuy.html.beans.Cart;
 import ibuy.html.beans.CartItem;
+import ibuy.html.beans.User;
 import ibuy.html.dao.ProductDAO;
 import ibuy.html.dao.SupplierDAO;
 import ibuy.html.utilities.ConnectionHandler;
 
 /**
- * Servlet implementation class AddToCart
+ * Servlet implementation class ShoppingCart
  */
-@WebServlet("/AddToCart")
-public class AddToCart extends HttpServlet {
+@WebServlet("/ShoppingCart")
+public class ShoppingCart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
 	private Connection connection = null;
@@ -38,7 +39,7 @@ public class AddToCart extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddToCart() {
+    public ShoppingCart() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -56,8 +57,25 @@ public class AddToCart extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+			//Dichiarazioni variabili
+			HttpServletRequest req = (HttpServletRequest) request;
+			HttpServletResponse res = (HttpServletResponse) response;
+			HttpSession session = req.getSession();
+			//carrello vuoto
+			if (session.getAttribute("cart") == null || session.getAttribute("items") == null) {
+				String path = "/WEB-INF/cart.html";
+				ServletContext servletContext = getServletContext();
+				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				ctx.setVariable("MessageKo", "Your shopping cart is empty....Hurry up to fill it up!");
+				templateEngine.process(path, ctx, response.getWriter());
+				return;
+			} else {
+				String path = "/WEB-INF/cart.html";
+				ServletContext servletContext = getServletContext();
+				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+				templateEngine.process(path, ctx, response.getWriter());
+				return;
+			}
 	}
 
 	/**

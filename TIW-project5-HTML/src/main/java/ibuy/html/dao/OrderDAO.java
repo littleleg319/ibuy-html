@@ -4,17 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.text.DateFormatter;
 
 import ibuy.html.beans.Cart;
 import ibuy.html.beans.CartItem;
+import ibuy.html.beans.Order;
+import ibuy.html.beans.OrderItem;
 
 public class OrderDAO {
 	private Connection con;
@@ -57,7 +55,7 @@ public class OrderDAO {
 		
 		String order_date = date.format(mydate);
 		String timestamp = date.format(datetime);
-		String data = date.format(dateonly);
+//		String data = date.format(dateonly);
 		
 		
 		//composizione nome ordine
@@ -154,4 +152,70 @@ public class OrderDAO {
 			return esito;
 			}
 	}
+	
+	public List<Order> findOrderByUserid (int userid){
+		List<Order> orders = new ArrayList<Order>();
+		String usr = String.valueOf(userid);
+		String query = "SELECT * FROM orders WHERE userid = ? ORDER BY timestmp DESC";
+			try (PreparedStatement pstatement = con.prepareStatement(query);) {
+					pstatement.setString(1, usr);
+					try (ResultSet result = pstatement.executeQuery();) {
+							if (!result.isBeforeFirst()) // no results, credential check failed
+								return null;
+								else {
+										while(result.next()) {
+											Order ord = new Order();
+											ord.setName(result.getString("ord_name"));
+											ord.setOrderId(result.getInt("id_order"));
+											ord.setPrice(result.getFloat("price"));
+											ord.setShipCost(result.getFloat("shipcost"));
+											ord.setSupplierId(result.getInt("supplierid"));
+											ord.setShipAddress(result.getString("shipaddress"));
+											ord.setShipDate(result.getString("shippingdate"));
+											ord.setSupplierName(result.getString("suppliername"));
+											ord.setTimeStamp(result.getString("timestmp"));
+											ord.setUserId(result.getInt("userid"));
+											orders.add(ord);
+													}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+			return orders;
+		}
+	
+	public List<OrderItem> findItemsByOrderId (int orderid){
+		List<OrderItem> items = new ArrayList<OrderItem>();
+		String id = String.valueOf(orderid);
+		String query = "SELECT * FROM product_order WHERE id_order = ?";
+			try (PreparedStatement pstatement = con.prepareStatement(query);) {
+					pstatement.setString(1, id);
+					try (ResultSet result = pstatement.executeQuery();) {
+							if (!result.isBeforeFirst()) // no results, credential check failed
+								return null;
+								else {
+										while(result.next()) {
+											OrderItem it = new OrderItem();
+											it.setOrderId(result.getInt("id_order"));
+											it.setPrice(result.getFloat("price"));
+											it.setProductId(result.getString("id_product"));
+											it.setQta(result.getInt("qta"));
+											items.add(it);
+													}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+			return items;
+		}
 }

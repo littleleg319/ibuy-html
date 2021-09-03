@@ -16,9 +16,9 @@
 <ol>
   <li><a th:href="@{/GoToHome}">Home Page</a></li>
   <li><a th:href="@{/ShowOrders}">My Orders</a></li>
-  <li><a th:href="@{/ShowCart}">My Shopping Cart</a></li>
+  <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
 </ol>
-	
+	<p th:text="${MessageKo}"></p>
 	<p>Your shopping cart</p>
 		<table>
 		<thead>
@@ -41,10 +41,9 @@
 		    	</tr>
 		    	<tr th:each="i : ${session.items}" th:if="${i.supplierid} == ${c.supplierid}">
 		    	<td th:text="${i.productid}"></td>
-		    	<td th:text="${i.name}">
-		    	<td th:text="${i.qta}">
+		    	<td th:text="${i.name}"></td>
+		    	<td th:text="${i.qta}"></td>
 		    	<p th:text=" ${errorMsg}"></p>
-		    	</td>	
 		    	</tr>
 		    	</table> 
 				</td>

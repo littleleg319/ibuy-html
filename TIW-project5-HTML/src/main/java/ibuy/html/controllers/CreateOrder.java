@@ -136,7 +136,7 @@ public class CreateOrder extends HttpServlet {
 		String path = "/WEB-INF/Home.html";
 		ServletContext servletContext = getServletContext();
 		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("MessageOk", "Il tuo ordine è stato creato con successo!");
+		ctx.setVariable("MessageOk", "Thank you! Your order has been successfully received! ");
 		templateEngine.process(path, ctx, response.getWriter());
 	}
 	

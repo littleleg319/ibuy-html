@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>iBuy Shopping Center</title>
+</head>
+<body>
+	<h1>Welcome to iBuy </h1>
+	<p th:text="${'Hi ' + session.user.name + '!'}"></p>
+	
+	<div></div>
+	<div align="right">
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
+
+<p>Menu</p>
+<ol>
+  <li><a th:href="@{/GoToHome}">Home Page</a></li>
+  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
+</ol>	
+		<p th:if="${MessageKo}" th:text="${MessageKo}" ></p>	
+			
+	<table th:if="${orders} != null">
+		<thead >
+			<tr>
+				<th>Order Name</th>
+				<th>Seller Name</th>
+				<th>Items List</th>
+				<th>Total Cost</th>
+				<th>Shipping Fee</th>
+				<th>Shipping Date</th>
+				<th>Shipping Address</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="o : ${orders}">
+				<td th:text="${o.name}"></td>
+				<td th:text="${o.suppliername}"></td>
+				<td>
+				<table> 
+					<thead>
+						<tr>
+							<th>Product Code</th>
+							<th>Quantity</th>
+							<th>Price Unit</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr th:each="i : ${orderitems}" th:if="${i.orderid} == ${o.orderid}">
+						<td th:text="${i.productid}"></td>
+						<td th:text="${i.qta}"></td>
+						<td th:text="${i.price}"></td>
+					</tr>
+					</tbody>
+				</table>
+				</td>
+		    	<td th:text="${o.price}"></td>	
+		    	<td th:text="${o.shipcost}"></td>
+		    	<td th:text="${o.shipaddress}"></td>
+		    	<td th:text="${o.shipdate}"></td>
+		    </tr> 
+		</tbody>
+	</table>
+</body>
+</html>
