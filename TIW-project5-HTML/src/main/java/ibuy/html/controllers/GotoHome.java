@@ -59,10 +59,10 @@ public class GotoHome extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//Check Login fatto con filtro
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		List<Product> recent_prod = new ArrayList<Product>();
+		List<String> categories = new ArrayList<String>();
 		ProductDAO products = new ProductDAO(connection);
 		try {
 			int myprods = products.findmissingProd(user.getId());
@@ -70,19 +70,23 @@ public class GotoHome extends HttpServlet {
 				recent_prod = products.findLastProductByUser(user.getId());
 				List<Product> default_prod = new ArrayList<Product>();
 				default_prod = products.findProductsByDefaultCat(myprods,user.getId());
+				categories = products.findCategories();
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 				ctx.setVariable("products", recent_prod);
 				ctx.setVariable("default_prods",default_prod);
+				ctx.setVariable("categories", categories);
 				templateEngine.process(path, ctx, response.getWriter());
 			}
 			else {
 				recent_prod = products.findLastProductByUser(user.getId());
+				categories = products.findCategories();
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 				ctx.setVariable("products", recent_prod);
+				ctx.setVariable("categories", categories);
 				templateEngine.process(path, ctx, response.getWriter());
 			}
 		} catch (SQLException e) {

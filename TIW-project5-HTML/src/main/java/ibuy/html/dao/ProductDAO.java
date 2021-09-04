@@ -117,7 +117,7 @@ public class ProductDAO {
 						Product prod = new Product();
 						prod.setCode(res.getString("code"));
 						prod.setName(res.getString("name"));
-						prod.setPrice(res.getString("price"));
+						prod.setPrice(res.getFloat("price"));
 						prods.add(prod);
 					}
 				}
@@ -180,5 +180,69 @@ public class ProductDAO {
 			}
 		}
 		
+		public List<Product> findProductsByCategory (String category, String keyword) throws SQLException {
+			List<Product> prods = new ArrayList<Product>();	
+			if (keyword == null) {
+			String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
+			try (PreparedStatement pstatement = con.prepareStatement(query);) {
+					pstatement.setString(1, category);
+				try (ResultSet result = pstatement.executeQuery();) {
+					if (!result.isBeforeFirst()) // no results. Something wrong
+						return null;
+					else {
+						while (result.next()) {
+							Product prod = new Product();
+							prod.setCode(result.getString("code"));
+							prod.setName(result.getString("name"));
+							prod.setDescription(result.getString("description"));
+							prod.setCategory(result.getString("category"));
+							prods.add(prod);
+						}
+					}
+				}
+			}
+			return prods;
+			} else  {
+				String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
+				try (PreparedStatement pstatement = con.prepareStatement(query);) {
+					pstatement.setString(1,"%" + keyword + "%");
+					pstatement.setString(2,"%" + keyword + "%");
+					pstatement.setString(3, category);
+					try (ResultSet result = pstatement.executeQuery();) {
+						if (!result.isBeforeFirst()) // no results. Something wrong
+							return null;
+						else {
+							while (result.next()) {
+								Product prod = new Product();
+								prod.setCode(result.getString("code"));
+								prod.setName(result.getString("name"));
+								prod.setDescription(result.getString("description"));
+								prod.setCategory(result.getString("category"));
+								prods.add(prod);
+							}
+						}
+					}
+				}
+				return prods;
+			}
+		}
 		
+		public List<String> findCategories () throws SQLException {
+			List<String> categories = new ArrayList<String>();
+			String query = "SELECT DISTINCT category FROM product";
+			try (PreparedStatement pstatement = con.prepareStatement(query);) {
+				try (ResultSet result = pstatement.executeQuery();) {
+					if (!result.isBeforeFirst()) // no results. Something wrong
+						return null;
+					else {
+						while (result.next()) {
+							String cat = null;
+							cat = result.getString("category");
+							categories.add(cat);
+						}
+					}
+				}
+			}
+			return categories;
+		}
 }

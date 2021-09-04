@@ -18,11 +18,19 @@
 
 
 <div th:text="${MessageOk}"></div>
-<div align="center">
+<div id="nav-search">
+<div class="nav-left">
+<select class="keyword" id="menu">
+    <option value="0">Select a category:</option>
+    <option th:each="cat,iterStat : ${categories}" th:value="${iterStat.count}" th:text="${cat}"></option>
+</select>
+</div>
+<div class="nav-right">
 <form  th:action="@{/ShowResults}" method="GET">
   <input type="text" placeholder="Find your product..." name="keyword" class="keyword">
   <input type="submit" value="Find" class="search">
 </form>
+</div>
 </div>
 <p class="text">Products you recently seen or you may like...</p>
 

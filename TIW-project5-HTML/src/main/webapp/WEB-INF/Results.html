@@ -16,7 +16,9 @@
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
 
-<p class="text" th:text="'Results for ' + ${keyword}"></p>
+<p class="text" th:unless="${keyword} == ''" th:text="'Results for ' + ${keyword}"></p>
+
+<div></div>
 	<table>
 		<thead>
 			<tr>
@@ -28,8 +30,8 @@
 		<tbody>
 			<tr th:each="p : ${products}">
 				<td th:text="${p.code}"></td>
-				<td><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code})}" th:text="${p.name }"></a></td>
-				<td th:text="${p.price }"></td>
+				<td><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code})}" th:text="${p.name}"></a></td>
+				<td th:text="${'EUR ' + p.price}"></td>
 			</tr>
 		</tbody>
 	</table>

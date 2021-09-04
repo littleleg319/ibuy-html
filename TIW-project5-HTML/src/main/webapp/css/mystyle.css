@@ -122,7 +122,7 @@ li a.active {
   width: 5%;
   background-color: #2492ff;
   color: white;
-  padding: 12px 20px;
+  padding: 12px 10px;
   margin: 8px 0;
   border: none;
   border-radius: 4px;
@@ -134,6 +134,7 @@ table {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 20px;
 }
 
 th,td {
@@ -154,4 +155,37 @@ th {
 .text {
 	text-align:center;
 	font:bold 20px Verdana, sans-serif ;
+}
+
+#menu {
+	display: block;
+ 	margin-left: auto;
+  	margin-right: auto;
+  	width: 200px;
+  	display: inline-block;
+  	padding: 12px 20px;
+  	margin: 8px 0;
+  	border: 1px solid #ccc;
+  	border-radius: 4px;
+  	box-sizing: border-box;
+}
+
+.nav-left {
+    position: relative;
+    display: inline-block;
+    float:left;
+    color:#666;
+}
+
+.nav-right {
+    width: auto;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#nav-search {
+	display: block;
+ 	margin-left: auto;
+  	margin-right: auto;
+  	margin-top: 20px;
 }
