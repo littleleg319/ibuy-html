@@ -120,36 +120,6 @@ public class ShowResults extends HttpServlet {
 					templateEngine.process(path, ctx, response.getWriter());
 					}
 				}
-/*				else { //ho scelto un prodotto
-				Product prod = new Product();
-				List<Supplier> suppliers = new ArrayList<Supplier>();
-				SupplierDAO supp = new SupplierDAO(connection);
-				prod = products.findProductDetails(code); 
-				if (prod == null) {
-					response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
-					return;
-				} else {					
-					suppliers = supp.findSupplierDetails(code);
-						if (suppliers == null) {
-							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
-							return;
-						} else {
-							prods_list = products.findProductsByKey(keyword); 
-							if (prods_list == null) {
-								response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
-								return;
-							} else {
-								String path = "/WEB-INF/Results.html";
-								ServletContext servletContext = getServletContext();
-								final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-								ctx.setVariable("products", prods_list);
-								ctx.setVariable("prod_details", prod);
-								ctx.setVariable("suppl_details", suppliers);
-								templateEngine.process(path, ctx, response.getWriter());
-							}
-						}			
-				}
-			}*/
 	}catch (SQLException e) {
 		// TODO Auto-generated catch block
 			e.printStackTrace();

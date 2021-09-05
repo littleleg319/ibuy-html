@@ -116,8 +116,9 @@ public class ShoppingCart extends HttpServlet {
 				response.sendRedirect(path);
 		} 
 		} catch (NumberFormatException | NullPointerException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-			return;
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 		}
 		
 		

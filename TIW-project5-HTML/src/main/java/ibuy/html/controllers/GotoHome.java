@@ -92,8 +92,9 @@ public class GotoHome extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//	e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover your recent seen products");
-			return;
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 		}
 	}
 

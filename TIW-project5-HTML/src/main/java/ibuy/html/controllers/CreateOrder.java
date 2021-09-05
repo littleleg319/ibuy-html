@@ -84,8 +84,9 @@ public class CreateOrder extends HttpServlet {
 		
 		//controllo che non siano vuoti
 		if (s.getAttribute("cart") == null || s.getAttribute("items") == null) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-			return;
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 		}
 		
 		//cerco il carrello di cui devo fare l'ordine 
@@ -95,8 +96,9 @@ public class CreateOrder extends HttpServlet {
 				}
 		//controllo che il mio carrello ci sia
 		if (order == null) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-			return;
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 		} else {
 			//cerco gli items
 				for (CartItem i : items) {
@@ -104,8 +106,9 @@ public class CreateOrder extends HttpServlet {
 						myitems.add(i);
 				}
 				if (myitems == null) {
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-					return;
+					String path;
+					path = "errorPage.html";
+					response.sendRedirect(path);
 				} else {
 					Integer esito = createOrder.CreateOrder(user.getId(),myitems, order);
 					if (esito == 0) { //tutto ok --> rimuovo il carrello e gli items
@@ -127,8 +130,9 @@ public class CreateOrder extends HttpServlet {
 								request.getSession().setAttribute("items", items);
 							}
 					} else {
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-						return;
+						String path;
+						path = "errorPage.html";
+						response.sendRedirect(path);
 					}
 				}
 			

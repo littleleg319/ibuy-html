@@ -86,8 +86,9 @@ public class ProductDetail extends HttpServlet {
 			} else 
 				prods_list = products.findProductsByCategory(category, keyword);
 				if (keyword == null || prods_list == null || prod == null || suppliers == null) {
-							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
-							return;
+					String path;
+					path = "errorPage.html";
+					response.sendRedirect(path);
 				} else {	
 							products.UpdateProductSeen(user.getId(),product);
 							String path = "/WEB-INF/Results.html";
@@ -105,8 +106,9 @@ public class ProductDetail extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			//	e.printStackTrace();
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-					return;
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 				}
 	}
 
