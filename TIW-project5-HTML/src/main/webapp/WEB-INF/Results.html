@@ -30,32 +30,33 @@
 		<tbody>
 			<tr th:each="p : ${products}">
 				<td th:text="${p.code}"></td>
-				<td><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code})}" th:text="${p.name}"></a></td>
+				<td><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code},category=${category})}" th:text="${p.name}"></a></td>
 				<td th:text="${'EUR ' + p.price}"></td>
 			</tr>
 		</tbody>
 	</table>
 
-	<table th:if="${prod_details != null}">
-		<thead>
-				<p> Product Details </p>
-			<tr>		
-				<th> Product Code</th>
-				<th>Product Name</th>
-				<th>Product Description</th>
-			</tr>
-			<tr th:each="pd : ${prod_details}">
-			<td th:text="${pd.code}"></td>
-			<td th:text="${pd.name}"></td>
-		    <td th:text="${pd.description}"></td>
-			<td> 
-				<img  th:src="@{'data:image/jpeg;base64,'+ ${pd.photo}}"/>
+	<table class="product" th:if="${prod_details != null}">
+
+			<tr class="product" th:each="pd : ${prod_details}">
+				<td> 
+					<img  th:src="@{'data:image/jpeg;base64,'+ ${pd.photo}}"/>
+				</td>
+				<td>
+					<dl>
+					<dt th:text="${pd.code}"></dt>
+					<dt th:text="${pd.name}"></dt>
+					<dt th:text="${pd.description}"></dt>
+					</dl>
+				</td>
+	
 			</td>
 			</tr>
-		</thead>
-		<p> Sold By </p>
-		<table th:if="${suppl_details != null}">
-		<thead th:each="s : ${suppl_details}">		
+		</table>
+		<br>
+
+		<table class="seller" th:if="${suppl_details != null}">
+		<thead >		
 			<tr>		
 				<th> Seller Name </th>
 				<th> Rating </th>
@@ -64,15 +65,15 @@
 				<th> Quantity</th>
 				<th> Shipping cost Details </th>
 			</tr>
-			<tr>
+			<tr th:each="s : ${suppl_details}">
 			<td th:text="${s.name}"></td>
 			<td th:text="${s.rating}"></td>
 		    <td th:text="${s.prodPrice}">€ </td>
 		    <td th:text="${s.freeshipping}">€</td>
 		    <td>
 		    <form th:action="@{/ShoppingCart}" method="POST">
-		    <input type="number" name="qta">
-		    <input type="submit" name="addtocart" value="Add to Cart!">
+		    <input class="qta" type="number" name="qta" min="1">
+		    <input class="checkout" type="submit" name="addtocart" value="Add to Cart!">
 		    <input type="hidden" name="productid" th:value="${param.code}">
 		    <input type="hidden" name="supplierid" th:value="${s.supplierid}">
 		    <input type="hidden" name="price" th:value="${s.prodPrice}">
@@ -81,7 +82,7 @@
 		    <input type="hidden" name="keyword" th:value="${param.keyword}"> 
 		    </form></td>
 		    <td> 
-		    	<table>
+		    	<table class="policy">
 		    	<tr>
 		    	<th>Minimum Articles</th>
 		    	<th>Maximum Articles</th>

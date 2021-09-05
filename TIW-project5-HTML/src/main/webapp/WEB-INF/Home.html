@@ -19,19 +19,22 @@
 
 <div th:text="${MessageOk}"></div>
 <div id="nav-search">
+<form  th:action="@{/ShowResults}" method="GET">
 <div class="nav-left">
-<select class="keyword" id="menu">
-    <option value="0">Select a category:</option>
-    <option th:each="cat,iterStat : ${categories}" th:value="${iterStat.count}" th:text="${cat}"></option>
+<select class="keyword" id="menu" name="category">
+    <option value="Initial">Select a category:</option>
+    <option th:each="cat,iterStat : ${categories}" th:value="${cat}"  th:text="${cat}"></option>
 </select>
 </div>
 <div class="nav-right">
-<form  th:action="@{/ShowResults}" method="GET">
+
   <input type="text" placeholder="Find your product..." name="keyword" class="keyword">
   <input type="submit" value="Find" class="search">
 </form>
+<p id="err_msg" th:if="${param.retry} != null" th:text="${'Sorry! No items found...'}"></p>
 </div>
 </div>
+
 <p class="text">Products you recently seen or you may like...</p>
 
 	<table>

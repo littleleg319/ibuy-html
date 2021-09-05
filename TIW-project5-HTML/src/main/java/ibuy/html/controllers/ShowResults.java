@@ -61,39 +61,65 @@ public class ShowResults extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//Dichiarazione parametri
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		List<Product> prods_list = new ArrayList<Product>();
 		ProductDAO products = new ProductDAO(connection);
 		String keyword = null;
 		String code = null;
-		code = StringEscapeUtils.escapeJava(request.getParameter("code"));
+		String category = null;
+		
+		//get paramteri
 			try { 
 				//Controllo che mi abbiano dato la chiave di ricerca e sono nella prima pagina
+				code = StringEscapeUtils.escapeJava(request.getParameter("code"));
 				keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
-				if (keyword == null & code == null) {
+				category = StringEscapeUtils.escapeJava(request.getParameter("category"));
+				
+				if (keyword == null & code == null & category.equals("Initial")) {
 					String path;
 					request.getSession().setAttribute("user", user);
-					path = getServletContext().getContextPath() + "/GoToHome";
+					path = getServletContext().getContextPath() + "/GoToHome" + "?retry";
 					response.sendRedirect(path);
-				} else if (code == null) { 
-				//sono nell'overview dei risultati
+					//ho solo keyword
+				} else if (code == null && category.equals("Initial")) { 
+				//sono nell'overview dei risultati e non è stata selezionata una categoria
 					prods_list = products.findProductsByKey(keyword); 
 					if (prods_list == null) {
 						String path;
 						request.getSession().setAttribute("user", user);
-						path = getServletContext().getContextPath() + "/GoToHome";
+						path = getServletContext().getContextPath() + "/GoToHome" + "?retry";
 						response.sendRedirect(path);
 					} else {
+					category = "";
 					String path = "/WEB-INF/Results.html";
-				//	request.getSession().setAttribute("keyword", keyword);
 					ServletContext servletContext = getServletContext();
 					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 					ctx.setVariable("products", prods_list);
 					ctx.setVariable("keyword", keyword);
+					ctx.setVariable("category", category);
 					templateEngine.process(path, ctx, response.getWriter());
 					}
-				} 
+				} //sono nell'overview dei risultati ed è stata scelta una categoria per ricerca 
+				else if (code == null && !(category == null)) {
+					prods_list = products.findProductsByCategory(category, keyword);
+					if (prods_list == null) {
+						String path;
+						request.getSession().setAttribute("user", user);
+						path = getServletContext().getContextPath() + "/GoToHome" + "?retry";
+						response.sendRedirect(path);
+
+					} else {
+					String path = "/WEB-INF/Results.html";
+					ServletContext servletContext = getServletContext();
+					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+					ctx.setVariable("products", prods_list);
+					ctx.setVariable("keyword", keyword);
+					ctx.setVariable("category",category);
+					templateEngine.process(path, ctx, response.getWriter());
+					}
+				}
 /*				else { //ho scelto un prodotto
 				Product prod = new Product();
 				List<Supplier> suppliers = new ArrayList<Supplier>();

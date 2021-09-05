@@ -182,7 +182,7 @@ public class ProductDAO {
 		
 		public List<Product> findProductsByCategory (String category, String keyword) throws SQLException {
 			List<Product> prods = new ArrayList<Product>();	
-			if (keyword == null) {
+			if (keyword == null || keyword=="") {
 			String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
 					pstatement.setString(1, category);
@@ -196,6 +196,7 @@ public class ProductDAO {
 							prod.setName(result.getString("name"));
 							prod.setDescription(result.getString("description"));
 							prod.setCategory(result.getString("category"));
+							prod.setPrice(result.getFloat("price"));
 							prods.add(prod);
 						}
 					}
@@ -218,6 +219,7 @@ public class ProductDAO {
 								prod.setName(result.getString("name"));
 								prod.setDescription(result.getString("description"));
 								prod.setCategory(result.getString("category"));
+								prod.setPrice(result.getFloat("price"));
 								prods.add(prod);
 							}
 						}

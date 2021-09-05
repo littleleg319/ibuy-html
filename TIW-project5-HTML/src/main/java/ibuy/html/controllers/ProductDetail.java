@@ -53,6 +53,7 @@ public class ProductDetail extends HttpServlet {
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
+		templateResolver.setCharacterEncoding("UTF-8");
 		connection = ConnectionHandler.getConnection(getServletContext());
 	}
 	/**
@@ -71,14 +72,19 @@ public class ProductDetail extends HttpServlet {
 		String product = null;
 		String keyword = null;
 		Product prod = new Product();
+		String category = null;
 		try { 
 			product = StringEscapeUtils.escapeJava(request.getParameter("code"));
 			keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
+			category = StringEscapeUtils.escapeJava(request.getParameter("category"));
 			prod = products.findProductDetails(product); 					
 			suppliers = supp.findSupplierDetails(product);
 			int[] supid = supp.findSupplierIds(product);
 			range = supp.findShippingRanges(supid);
-			prods_list = products.findProductsByKey(keyword); 
+			if (category == "Initial" || category == "") {
+			prods_list = products.findProductsByKey(keyword);
+			} else 
+				prods_list = products.findProductsByCategory(category, keyword);
 				if (keyword == null || prods_list == null || prod == null || suppliers == null) {
 							response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ops....Something went wrong");
 							return;
@@ -93,6 +99,7 @@ public class ProductDetail extends HttpServlet {
 							ctx.setVariable("suppl_details", suppliers);
 							ctx.setVariable("keyword", keyword);
 							ctx.setVariable("ranges", range);
+							ctx.setVariable("category", category);
 							templateEngine.process(path, ctx, response.getWriter());
 							}
 		} catch (SQLException e) {

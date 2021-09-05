@@ -3,34 +3,30 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>iBuy Shopping Center</title>
+<link rel="stylesheet" type="text/css" media="all" href="../css/mystyle.css" th:href="@{/css/mystyle.css}"/>
 </head>
 <body>
-	<h1>Welcome to iBuy </h1>
-	<p th:text="${'Hi ' + session.user.name + '!'}"></p>
-	
-	<div></div>
-	<div align="right">
-		<a th:href="@{/Logout}">Logout</a>
-	</div>
+	<h1> <a th:href="@{/GoToHome}"><img src="../img/Logo.png" th:attr="src=@{/img/Logo.png}" class="pages"></a></h1>
 
-<p>Menu</p>
-<ol>
+<ul>
   <li><a th:href="@{/GoToHome}">Home Page</a></li>
-  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/ShowOrders}" class="active">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
-</ol>	
+  <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
+  <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
+</ul>
 		<p th:if="${MessageKo}" th:text="${MessageKo}" ></p>	
 			
-	<table th:if="${orders} != null">
+	<table class="orders" th:if="${orders} != null">
 		<thead >
 			<tr>
-				<th>Order Name</th>
-				<th>Seller Name</th>
-				<th>Items List</th>
-				<th>Total Cost</th>
-				<th>Shipping Fee</th>
-				<th>Shipping Date</th>
-				<th>Shipping Address</th>
+				<th class="orders">Order Name</th>
+				<th class="orders">Seller Name</th>
+				<th class="orders">Items List</th>
+				<th class="orders">Total Cost</th>
+				<th class="orders">Shipping Fee</th>
+				<th class="orders">Shipping Date</th>
+				<th class="orders">Shipping Address</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,8 +34,8 @@
 				<td th:text="${o.name}"></td>
 				<td th:text="${o.suppliername}"></td>
 				<td>
-				<table> 
-					<thead>
+				<table class="details"> 
+					<thead class="details">
 						<tr>
 							<th>Product Code</th>
 							<th>Quantity</th>
@@ -57,8 +53,9 @@
 				</td>
 		    	<td th:text="${o.price}"></td>	
 		    	<td th:text="${o.shipcost}"></td>
-		    	<td th:text="${o.shipaddress}"></td>
 		    	<td th:text="${o.shipdate}"></td>
+		    	<td th:text="${o.shipaddress}"></td>
+
 		    </tr> 
 		</tbody>
 	</table>

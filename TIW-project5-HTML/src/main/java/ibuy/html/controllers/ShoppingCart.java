@@ -89,10 +89,10 @@ public class ShoppingCart extends HttpServlet {
 		String prodid = null;
 		String suppl_name = null;
 		Integer qta = null;
-		Float price = (float) 0.0;
-		Float totalPrice = (float) 0.0;
-		Float fee = (float) 0.0;
-		Float freeship = (float) 0.0;
+		Float price = (float) 0.00;
+		Float totalPrice = (float) 0.00;
+		Float fee = (float) 0.00;
+		Float freeship = (float) 0.00;
 		List<CartItem> items = new ArrayList<CartItem>();
 		List<Cart> cart_items = new ArrayList<Cart>();
 		SupplierDAO range = new SupplierDAO(connection);
@@ -111,8 +111,9 @@ public class ShoppingCart extends HttpServlet {
 		try {
 			qta=Integer.parseInt(request.getParameter("qta"));
 			if (qta == null || qta <= 0) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-				return;
+				String path;
+				path = "errorPage.html";
+				response.sendRedirect(path);
 		} 
 		} catch (NumberFormatException | NullPointerException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");

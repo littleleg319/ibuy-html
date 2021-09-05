@@ -63,8 +63,8 @@ input[type=submit]:hover {
 	padding: 14px 16px;
   	text-decoration: none;
   	display: block;
-  	margin-left: 450px;
-    margin-right: 450px;
+  	margin-left: 20%;
+    margin-right: 20%;
     text-shadow: 1px 1px 1px black;
 }
 
@@ -188,4 +188,91 @@ th {
  	margin-left: auto;
   	margin-right: auto;
   	margin-top: 20px;
+}
+
+p#err_msg{
+	color: dodgerblue;
+	font : bold italic 15px Verdana, sans-serif
+}
+
+table.product{
+	float: left;
+}
+
+tr.product{
+	background-color: rgb(241, 241, 241);
+}
+
+table.seller{
+	width: auto;
+}
+
+table.policy {
+    margin: 0;
+    width: fit-content;
+    font-size: x-small;
+    background-color: thistle;
+}
+
+.checkout {
+    background-color: #2492ff;
+    color: white;
+    padding: 8px 20px;
+    margin: 9px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font: bold 12px Verdana, sans-serif;
+}
+
+.qta{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.orders{
+	width: auto;
+	text-align:center;
+}
+
+table.details {
+    margin: inherit;
+    width: 100%;
+}
+
+thead.details{
+	width: auto;
+    padding: initial;
+    font-size: small;
+    white-space: nowrap;
+}
+
+.empty{
+	font: bold 25px Verdana,sans-serif;
+	text-align:center;
+	color: dodgerblue;
+}
+
+td.nocolor {
+    background-color: rgb(241, 241, 241);
+}
+
+img.error_page {
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p.error_page{
+	text-align: center;
+	font: bold 20px Verdana, sans-serif;
+	color:dodgerblue;
 }
