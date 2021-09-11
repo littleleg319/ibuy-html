@@ -84,7 +84,7 @@ public class ShowResults extends HttpServlet {
 					response.sendRedirect(path);
 					//ho solo keyword
 				} else if (code == null && category.equals("Initial")) { 
-				//sono nell'overview dei risultati e non è stata selezionata una categoria
+				//sono nell'overview dei risultati e non Ã¨ stata selezionata una categoria
 					prods_list = products.findProductsByKey(keyword); 
 					if (prods_list == null) {
 						String path;
@@ -92,6 +92,7 @@ public class ShowResults extends HttpServlet {
 						path = getServletContext().getContextPath() + "/GoToHome" + "?retry";
 						response.sendRedirect(path);
 					} else {
+						//ho trovato dei prodotti
 					category = "";
 					String path = "/WEB-INF/Results.html";
 					ServletContext servletContext = getServletContext();
@@ -101,7 +102,7 @@ public class ShowResults extends HttpServlet {
 					ctx.setVariable("category", category);
 					templateEngine.process(path, ctx, response.getWriter());
 					}
-				} //sono nell'overview dei risultati ed è stata scelta una categoria per ricerca 
+				} //sono nell'overview dei risultati ed ï¿½ stata scelta una categoria per ricerca 
 				else if (code == null && !(category == null)) {
 					prods_list = products.findProductsByCategory(category, keyword);
 					if (prods_list == null) {
@@ -122,9 +123,9 @@ public class ShowResults extends HttpServlet {
 				}
 	}catch (SQLException e) {
 		// TODO Auto-generated catch block
-			e.printStackTrace();
-			//	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ops....Something went wrong");
-			// return;
+				String path;
+				path = "errorPage.html";
+				response.sendRedirect(path);
 			}
 }	
 		

@@ -1,7 +1,7 @@
 <!DOCTYPE html>	
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>iBuy Shopping Center</title>
 <link rel="stylesheet" type="text/css" media="all" href="../css/mystyle.css" th:href="@{/css/mystyle.css}"/>
 </head>
@@ -10,7 +10,7 @@
 
 <ul>
   <li><a th:href="@{/GoToHome}" class="active">Home Page</a></li>
-  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/Orders}">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
   <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
@@ -44,8 +44,8 @@
 				</td>
 				<td>
 					<dl>
-					<dt th:text="${pd.code}"></dt>
-					<dt th:text="${pd.name}"></dt>
+					<dt class="testata" th:text="${pd.code}"></dt>
+					<dt class="testata" th:text="${pd.name}"></dt>
 					<dt th:text="${pd.description}"></dt>
 					</dl>
 				</td>
@@ -96,8 +96,8 @@
 		    	</table> 
 		    </td>
 		    <td>
-		    <table th:each="c : ${session.cart}" >
-		    	<tr th:if="${s.supplierid} == ${c.supplierid}" >
+		    <table th:each="c : ${session.cart}" th:if="${s.supplierid} == ${c.supplierid}"  >
+		    	<tr>
 		    	<th>Number of Items of this Seller in your Cart</th>
 		    	<th>Total Cost in Cart from this Seller</th>
 		    	</tr>

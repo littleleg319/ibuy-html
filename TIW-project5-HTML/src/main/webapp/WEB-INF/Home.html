@@ -1,7 +1,7 @@
 <!DOCTYPE html>	
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>iBuy Shopping Center</title>
 <link rel="stylesheet" type="text/css" media="all" href="../css/mystyle.css" th:href="@{/css/mystyle.css}"/>
 </head>
@@ -10,14 +10,14 @@
 
 <ul>
   <li><a th:href="@{/GoToHome}" class="active">Home Page</a></li>
-  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/Orders}">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
   <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
 
 
-<div th:text="${MessageOk}"></div>
+<div id="err_msg" th:text="${MessageOk}"></div>
 <div id="nav-search">
 <form  th:action="@{/ShowResults}" method="GET">
 <div class="nav-left">
@@ -35,7 +35,7 @@
 </div>
 </div>
 
-<p class="text">Products you recently seen or you may like...</p>
+<p class="text">Products you recently seen or currently in offer...</p>
 
 	<table>
 		<thead>

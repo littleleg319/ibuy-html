@@ -21,6 +21,8 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import ibuy.html.beans.Cart;
 import ibuy.html.beans.CartItem;
+import ibuy.html.beans.Order;
+import ibuy.html.beans.OrderItem;
 import ibuy.html.beans.User;
 import ibuy.html.dao.OrderDAO;
 import ibuy.html.utilities.ConnectionHandler;
@@ -28,15 +30,15 @@ import ibuy.html.utilities.ConnectionHandler;
 /**
  * Servlet implementation class CreateOrder
  */
-@WebServlet("/CreateOrder")
-public class CreateOrder extends HttpServlet {
+@WebServlet("/Orders")
+public class Orders extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TemplateEngine templateEngine;
 	private Connection connection = null;   
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateOrder() {
+    public Orders() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -55,8 +57,34 @@ public class CreateOrder extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		List<Order> myorders = new ArrayList<Order>();
+		List<OrderItem> order_items = new ArrayList<OrderItem>();
+		
+		OrderDAO orders = new OrderDAO(connection);
+		//cerco i miei ordini
+		myorders = orders.findOrderByUserid(user.getId());
+		//non ho ordini
+		if (myorders == null) {
+			String path = "/WEB-INF/myorders.html";
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("MessageKo", "Seems that you didn't order anything yet....");
+			templateEngine.process(path, ctx, response.getWriter());
+			return;
+		} else { //ho ordini --> cerco i dettagli degli item per ordine
+			for (Order i : myorders) {
+				order_items.addAll(orders.findItemsByOrderId(i.getOrderId()));
+			}
+			String path = "/WEB-INF/myorders.html";
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("orders", myorders);
+			ctx.setVariable("orderitems", order_items);
+			templateEngine.process(path, ctx, response.getWriter());
+			return;
+		}
 	}
 
 	/**
@@ -122,13 +150,13 @@ public class CreateOrder extends HttpServlet {
 							if (items.get(j).getSupplierId() == supplierid)
 								items.remove(j);
 						}
-						if (cart_global.isEmpty()) {//non ho più carrelli
+						if (cart_global.isEmpty()) {//non ho piï¿½ carrelli
 							request.getSession().removeAttribute("cart");
 							request.getSession().removeAttribute("items");
 							} else {
 								request.getSession().setAttribute("cart", cart_global);
 								request.getSession().setAttribute("items", items);
-							}
+								request.getSession().setAttribute("user", user);							}
 					} else {
 						String path;
 						path = "errorPage.html";
@@ -137,11 +165,14 @@ public class CreateOrder extends HttpServlet {
 				}
 			
 		} 
-		String path = "/WEB-INF/Home.html";
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("MessageOk", "Thank you! Your order has been successfully received! ");
-		templateEngine.process(path, ctx, response.getWriter());
+		//String path = "/WEB-INF/Home.html";
+		//String path = getServletContext().getContextPath() + "/GoToHome";
+		//ServletContext servletContext = getServletContext();
+		//final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		//ctx.setVariable("MessageOk", "Thank you! Your order has been successfully received! ");
+		//templateEngine.process(path, ctx, response.getWriter());
+		String path = getServletContext().getContextPath() + "/GoToHome" + "?order_ok=true";
+		response.sendRedirect(path);
 	}
 	
 	public void destroy() {

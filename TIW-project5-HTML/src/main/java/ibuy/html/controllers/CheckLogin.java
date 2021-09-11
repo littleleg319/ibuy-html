@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
@@ -53,13 +54,22 @@ public class CheckLogin extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String path = null;
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		path = "/default.html";
-		templateEngine.process(path, ctx, response.getWriter());
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		String path = null;	
+		//l'utente non è loggato
+		if(user == null) {
+					ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			path = "/default.html";
+			templateEngine.process(path, ctx, response.getWriter());
+		} else {
+			//L'utente è loggato
+			request.getSession().setAttribute("user", user);
+			path = getServletContext().getContextPath() + "/GoToHome";
+			response.sendRedirect(path);
+		}
+;
 	}
 
 	/**
@@ -81,18 +91,14 @@ public class CheckLogin extends HttpServlet {
 			return;
 		} 
 		
-		// query db to authenticate for user
+		// Username e password dati --> verifico a DB che siano corretti
 		UserDAO userDao = new UserDAO(connection);
 		User user = null;
 		try {
 			user = userDao.checkCredentials(usrn, pwd);
 		} catch (SQLException e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			//print specific error in console
-			System.out.print(e);
-			//error message for customer
-			response.getWriter().println("Internal Error...Please retry");
-			return;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 		}
 
 		// If the user exists, add info to the session and go to home page, otherwise

@@ -10,7 +10,7 @@
 
 <ul>
   <li><a th:href="@{/GoToHome}">Home Page</a></li>
-  <li><a th:href="@{/ShowOrders}">My Orders</a></li>
+  <li><a th:href="@{/Orders}">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}" class="active">My Shopping Cart</a></li>
   <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
@@ -54,8 +54,8 @@
 				<td th:text="${'EUR ' + c.totalCost}"></td>
 				<td th:text="${'EUR ' + c.fee}"></td>
 				<td class="nocolor">
-				<form th:action="@{/CreateOrder}" method="POST">
-		    	<input type="submit" name="checkout" value="Checkout!">
+				<form th:action="@{/Orders}" method="POST">
+		    	<input class="checkout" type="submit" name="checkout" value="Checkout!">
 		    	<input type="hidden" name="supplierid" th:value="${c.supplierid}">
 		    	</form>
 				</td>

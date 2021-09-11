@@ -47,6 +47,7 @@ public class GotoHome extends HttpServlet {
 		ServletContext servletContext = getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
 		templateResolver.setTemplateMode(TemplateMode.HTML);
+		templateResolver.setCharacterEncoding("UTF-8");
 		this.templateEngine = new TemplateEngine();
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
@@ -58,36 +59,69 @@ public class GotoHome extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		//Diachiarazione variabili
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		List<Product> recent_prod = new ArrayList<Product>();
 		List<String> categories = new ArrayList<String>();
 		ProductDAO products = new ProductDAO(connection);
+		String ok_msg = request.getParameter("order_ok");
+		
 		try {
 			int myprods = products.findmissingProd(user.getId());
-			if (myprods < 5 ) { //ho visto meno di 5 oggetti
+			if (myprods < 5 ) { 
+				//ho visto meno di 5 oggetti --> prendo quelli che ho visto
 				recent_prod = products.findLastProductByUser(user.getId());
 				List<Product> default_prod = new ArrayList<Product>();
+				//il delta lo cerco nella Default Category tra i prodotti in offerta
 				default_prod = products.findProductsByDefaultCat(myprods,user.getId());
+				//listo le categorie prodotti presenti
 				categories = products.findCategories();
+				// Caso in cui vado alla Home dopo un ordine effettuato
+				if (!(ok_msg == null )) {
+					if (ok_msg.equals("true")) {
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 				ctx.setVariable("products", recent_prod);
 				ctx.setVariable("default_prods",default_prod);
 				ctx.setVariable("categories", categories);
+				ctx.setVariable("MessageOk", "Thank you! Your order has been successfully received! ");
 				templateEngine.process(path, ctx, response.getWriter());
+				} 
+				} else { 
+					//Vado alla HOME negli altri casi
+					String path = "/WEB-INF/Home.html";
+					ServletContext servletContext = getServletContext();
+					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+					ctx.setVariable("products", recent_prod);
+					ctx.setVariable("default_prods",default_prod);
+					ctx.setVariable("categories", categories);
+					templateEngine.process(path, ctx, response.getWriter());
+				}
 			}
-			else {
+			else { //ho visto 5 oggetti
 				recent_prod = products.findLastProductByUser(user.getId());
 				categories = products.findCategories();
+				// Caso in cui vado alla Home dopo un ordine effettuato
+				if (!(ok_msg == null )) {
+					if (ok_msg.equals("true")) {
 				String path = "/WEB-INF/Home.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 				ctx.setVariable("products", recent_prod);
 				ctx.setVariable("categories", categories);
+				ctx.setVariable("MessageOk", "Thank you! Your order has been successfully received! ");
 				templateEngine.process(path, ctx, response.getWriter());
+				} } else { 
+					//Vado alla HOME negli altri casi
+					String path = "/WEB-INF/Home.html";
+					ServletContext servletContext = getServletContext();
+					final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+					ctx.setVariable("products", recent_prod);
+					ctx.setVariable("categories", categories);
+					templateEngine.process(path, ctx, response.getWriter());
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -60,8 +60,7 @@ public class ProductDetail extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		//Dichiaro variabili e prendo la sessione utente
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		List<Supplier> suppliers = new ArrayList<Supplier>();
@@ -73,7 +72,7 @@ public class ProductDetail extends HttpServlet {
 		String keyword = null;
 		Product prod = new Product();
 		String category = null;
-		try { 
+		try { //Cerco dettagli prodotto 
 			product = StringEscapeUtils.escapeJava(request.getParameter("code"));
 			keyword = StringEscapeUtils.escapeJava(request.getParameter("keyword"));
 			category = StringEscapeUtils.escapeJava(request.getParameter("category"));
@@ -82,10 +81,12 @@ public class ProductDetail extends HttpServlet {
 			int[] supid = supp.findSupplierIds(product);
 			range = supp.findShippingRanges(supid);
 			if (category == "Initial" || category == "") {
+				//Non ho filtrato per categoria, ma solo per parola chiave
 			prods_list = products.findProductsByKey(keyword);
 			} else 
+				//Ho filtrato per categoria e parola chiave
 				prods_list = products.findProductsByCategory(category, keyword);
-				if (keyword == null || prods_list == null || prod == null || suppliers == null) {
+			if (keyword == null || prods_list == null || prod == null || suppliers == null) {
 					String path;
 					path = "errorPage.html";
 					response.sendRedirect(path);
@@ -94,7 +95,6 @@ public class ProductDetail extends HttpServlet {
 							String path = "/WEB-INF/Results.html";
 							ServletContext servletContext = getServletContext();
 							final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-						//	request.getSession().setAttribute("keyword", keyword);
 							ctx.setVariable("products", prods_list);
 							ctx.setVariable("prod_details", prod);
 							ctx.setVariable("suppl_details", suppliers);

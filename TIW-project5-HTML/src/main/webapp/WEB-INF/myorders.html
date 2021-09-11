@@ -10,13 +10,14 @@
 
 <ul>
   <li><a th:href="@{/GoToHome}">Home Page</a></li>
-  <li><a th:href="@{/ShowOrders}" class="active">My Orders</a></li>
+  <li><a th:href="@{/Orders}" class="active">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
   <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
-		<p th:if="${MessageKo}" th:text="${MessageKo}" ></p>	
-			
+<div>
+		<p id="err_msg" th:if="${MessageKo}" th:text="${MessageKo}" ></p>	
+</div>			
 	<table class="orders" th:if="${orders} != null">
 		<thead >
 			<tr>
@@ -46,13 +47,13 @@
 					<tr th:each="i : ${orderitems}" th:if="${i.orderid} == ${o.orderid}">
 						<td th:text="${i.productid}"></td>
 						<td th:text="${i.qta}"></td>
-						<td th:text="${i.price}"></td>
+						<td th:text="${'EUR ' + i.price}"></td>
 					</tr>
 					</tbody>
 				</table>
 				</td>
 		    	<td th:text="${o.price}"></td>	
-		    	<td th:text="${o.shipcost}"></td>
+		    	<td th:text="${'EUR ' + o.shipcost}"></td>
 		    	<td th:text="${o.shipdate}"></td>
 		    	<td th:text="${o.shipaddress}"></td>
 

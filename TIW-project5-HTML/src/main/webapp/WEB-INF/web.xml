@@ -28,8 +28,7 @@
     <url-pattern>/ShowResults</url-pattern> 
     <url-pattern>/ProductDetail</url-pattern> 
     <url-pattern>/ShoppingCart</url-pattern>
-    <url-pattern>/CreateOrder</url-pattern>
-    <url-pattern>/ShowOrders</url-pattern>
+    <url-pattern>/Orders</url-pattern>
  </filter-mapping> 
   <welcome-file-list>
     <welcome-file>default.html</welcome-file>

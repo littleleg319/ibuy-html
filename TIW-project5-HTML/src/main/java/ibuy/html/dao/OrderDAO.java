@@ -56,8 +56,7 @@ public class OrderDAO {
 		String order_date = date.format(mydate);
 		String timestamp = date.format(datetime);
 //		String data = date.format(dateonly);
-		
-		
+				
 		//composizione nome ordine
 		name = "OD" + usr + supplierid + order_date;
 		

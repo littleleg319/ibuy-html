@@ -70,6 +70,7 @@ public class ShoppingCart extends HttpServlet {
 				templateEngine.process(path, ctx, response.getWriter());
 				return;
 			} else {
+				//Carrello pieno
 				String path = "/WEB-INF/cart.html";
 				ServletContext servletContext = getServletContext();
 				final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
@@ -109,6 +110,7 @@ public class ShoppingCart extends HttpServlet {
 		suppl_name=StringEscapeUtils.escapeJava(request.getParameter("suppl_name"));
 		keyword=StringEscapeUtils.escapeJava(request.getParameter("keyword"));
 		try {
+			//Check qta sia valido
 			qta=Integer.parseInt(request.getParameter("qta"));
 			if (qta == null || qta <= 0) {
 				String path;
@@ -126,8 +128,9 @@ public class ShoppingCart extends HttpServlet {
 		try {
 			prod_name = prodotto.findProductDetails(prodid).getName();
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
 		}
 		//Prendo la sessione
 		HttpServletRequest req = (HttpServletRequest) request;
@@ -144,11 +147,12 @@ public class ShoppingCart extends HttpServlet {
 				else 
 					fee = (float) 0;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				String path;
+				path = "errorPage.html";
+				response.sendRedirect(path);
 			}
 			
-
+			//Creo l'item per il prodotto scelto
 			CartItem item = new CartItem();
 			item.setProductId(prodid);
 			item.setQta(qta);
@@ -156,7 +160,8 @@ public class ShoppingCart extends HttpServlet {
 			item.setName(prod_name);
 			item.setSupplierId(suppid);
 			items.add(item);
-
+			
+			//Creo un carrello per questo fornitore
 			Cart cart = new Cart();
 			cart.setSupplierId(suppid);
 			cart.setFee(fee);
@@ -166,7 +171,7 @@ public class ShoppingCart extends HttpServlet {
 			cart.setFreeShip(freeship);
 			cart_items.add(cart);
 		} else { 
-			// un carrello gi‡ esiste
+			// un carrello gi√† esiste
 			cart_items= (List<Cart>) s.getAttribute("cart");
 			items = (List<CartItem>) s.getAttribute("items");
 			boolean incart = false;
@@ -183,8 +188,8 @@ public class ShoppingCart extends HttpServlet {
 						incart = true;
 					}
 				}
-			//ho gi‡ l'articolo nel carrello di quel fornitore nel carrello
-			//quindi aggiorno solo la Quantit‡
+			//ho gi√† nel carrello di quel fornitore lo stesso item 
+			//quindi aggiorno solo la Quantit√†
 			if (initem && incart) {
 						for (CartItem cm : items) {
 							if(cm.getSupplierId()==suppid) {
@@ -248,8 +253,9 @@ public class ShoppingCart extends HttpServlet {
 												fee=range.CalculateShippingCost(articles, suppid);
 												c2.setFee(fee);
 												} catch (SQLException e) {
-														// TODO Auto-generated catch block
-														e.printStackTrace();
+													String path;
+													path = "errorPage.html";
+													response.sendRedirect(path);
 														}
 							} else {
 								fee = (float) 0;

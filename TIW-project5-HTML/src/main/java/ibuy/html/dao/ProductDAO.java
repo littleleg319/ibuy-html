@@ -20,16 +20,21 @@ public class ProductDAO {
 		this.con = connection;
 	}
 		public List<Product> findProductsByDefaultCat (int missing, int userid) throws SQLException {
+			//prdotti che devo prelevare dalla categoria di default
 			int number = 5 - missing;
+			//dichiarazione della lista prodotti
 			List<Product> prods = new ArrayList<Product>();
 			String value = String.valueOf(number);
 			String usr = String.valueOf(userid);
-			String query = "SELECT * FROM product as p WHERE category = ? AND NOT EXISTS (SELECT code FROM product as m INNER JOIN user_product as u ON m.code = u.productid  WHERE u.userid = ? AND m.code = p.code)ORDER BY rand() limit 0,?";
+			String discount = "discount";
+			String query = "SELECT * FROM product as p WHERE p.category = ? AND p.description like ? AND NOT EXISTS (SELECT code FROM product as m INNER JOIN user_product as u ON m.code = u.productid  WHERE u.userid = ? AND m.code = p.code)ORDER BY rand() limit 0,?";
 			String category = "Gym Equipment";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
 				pstatement.setString(1, category);
-				pstatement.setString(2, usr);
-				pstatement.setInt(3, number);
+				//prodotti in offerta hanno la stringa "discount"
+				pstatement.setString(2,"%" + discount + "%");
+				pstatement.setString(3, usr);
+				pstatement.setInt(4, number);
 				try (ResultSet result = pstatement.executeQuery();) {
 					if (!result.isBeforeFirst()) // no results. Something wrong
 						return null;
@@ -55,17 +60,18 @@ public class ProductDAO {
 			try (PreparedStatement ps = con.prepareStatement(check);){
 				ps.setString(1, usr);
 				ResultSet res = ps.executeQuery();
+				//verifico che l'utente abbia visualizzato prodotti
 				if (!res.isBeforeFirst())
 					return null;
 				else {
 					res.next();
 			int s = res.getInt("total");
-			if (s > 0) {
+			if (s > 0) { //prendo i dettagli dei prodotti
 			String query1 = "SELECT code, name, description FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? ORDER BY timestamp DESC LIMIT 5";
 			try (PreparedStatement pstatement = con.prepareStatement(query1);) {
 				pstatement.setString(1, usr);
 				try (ResultSet result = pstatement.executeQuery();) {
-					if (!result.isBeforeFirst()) // no results, credential check failed
+					if (!result.isBeforeFirst()) // no results
 						return null;
 					else {
 						while(result.next()) {
@@ -105,7 +111,6 @@ public class ProductDAO {
 			List<Product> prods = new ArrayList<Product>();
 			String escape_char = "%";
 			String check = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
-//			String check = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like '%tv%' or p.description like '%tv%') AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
 			try (PreparedStatement ps = con.prepareStatement(check);) {
 				ps.setString(1,"%" + key + "%");
 				ps.setString(2,"%" + key + "%");
@@ -162,8 +167,20 @@ public class ProductDAO {
 						PreparedStatement ps = con.prepareStatement(insert_seen);
 						ps.setString(1, usr);
 						ps.setString(2, productId);
-						ps.executeUpdate();
-						} else {
+						int esito = ps.executeUpdate();
+							if (esito != 0) {
+								//ho fatto l'insert --> cancello la riga pi� vecchia 
+								try {
+									String delete = "DELETE FROM user_product where userid = ? order by timestamp ASC LIMIT 1";
+									PreparedStatement dl = con.prepareStatement(delete);
+									dl.setString(1, usr);
+									dl.executeUpdate();
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+							}
+						} 
+					} else { //aggiorno timestamp di una entry esistente
 						String update_seen = "UPDATE user_product SET timestamp=NOW() WHERE userid = ? AND productid = ?";
 						PreparedStatement ps = con.prepareStatement(update_seen);
 						ps.setString(1, usr);
@@ -183,6 +200,7 @@ public class ProductDAO {
 		public List<Product> findProductsByCategory (String category, String keyword) throws SQLException {
 			List<Product> prods = new ArrayList<Product>();	
 			if (keyword == null || keyword=="") {
+				//non ho messo keyword, ma solo category
 			String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
 					pstatement.setString(1, category);
@@ -204,6 +222,7 @@ public class ProductDAO {
 			}
 			return prods;
 			} else  {
+				//filtro sia per category che per keyword
 				String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
 				try (PreparedStatement pstatement = con.prepareStatement(query);) {
 					pstatement.setString(1,"%" + keyword + "%");

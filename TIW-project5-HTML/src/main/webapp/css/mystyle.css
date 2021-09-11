@@ -131,7 +131,7 @@ li a.active {
 }
 table {
   border-collapse: collapse;
-  width: 50%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
@@ -193,6 +193,12 @@ th {
 p#err_msg{
 	color: dodgerblue;
 	font : bold italic 15px Verdana, sans-serif
+}
+
+div#err_msg{
+	color: dodgerblue;
+	font : bold italic 15px Verdana, sans-serif;
+	text-align: center;
 }
 
 table.product{
@@ -275,4 +281,12 @@ p.error_page{
 	text-align: center;
 	font: bold 20px Verdana, sans-serif;
 	color:dodgerblue;
+}
+
+dt.testata {
+    font-weight: bold;
+}
+
+.error_page{
+	background-color:white;
 }
