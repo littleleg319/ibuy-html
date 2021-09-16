@@ -153,7 +153,7 @@ public class Orders extends HttpServlet {
 						if (cart_global.isEmpty()) {//non ho pi� carrelli
 							request.getSession().removeAttribute("cart");
 							request.getSession().removeAttribute("items");
-							} else {
+							} else { //altrimenti aggiorno i carrelli in sessione
 								request.getSession().setAttribute("cart", cart_global);
 								request.getSession().setAttribute("items", items);
 								request.getSession().setAttribute("user", user);							}
