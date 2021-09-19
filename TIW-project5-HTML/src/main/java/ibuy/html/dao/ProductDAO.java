@@ -110,7 +110,7 @@ public class ProductDAO {
 		public List<Product> findProductsByKey(String key) throws SQLException{
 			List<Product> prods = new ArrayList<Product>();
 			String escape_char = "%";
-			String check = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
+			String check = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code) ORDER BY s.price ASC";
 			try (PreparedStatement ps = con.prepareStatement(check);) {
 				ps.setString(1,"%" + key + "%");
 				ps.setString(2,"%" + key + "%");
@@ -201,7 +201,7 @@ public class ProductDAO {
 			List<Product> prods = new ArrayList<Product>();	
 			if (keyword == null || keyword=="") {
 				//non ho messo keyword, ma solo category
-			String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
+			String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code) ORDER BY s.price ASC";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
 					pstatement.setString(1, category);
 				try (ResultSet result = pstatement.executeQuery();) {
@@ -223,7 +223,7 @@ public class ProductDAO {
 			return prods;
 			} else  {
 				//filtro sia per category che per keyword
-				String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code)";
+				String query = "SELECT * FROM product as p , supplier_product_price as s WHERE p.code=s.idproduct AND (p.name like ? or p.description like ?) AND p.category = ? AND s.price=(SELECT min(price) from supplier_product_price WHERE supplier_product_price.idproduct = p.code) ORDER BY s.price ASC";
 				try (PreparedStatement pstatement = con.prepareStatement(query);) {
 					pstatement.setString(1,"%" + keyword + "%");
 					pstatement.setString(2,"%" + keyword + "%");

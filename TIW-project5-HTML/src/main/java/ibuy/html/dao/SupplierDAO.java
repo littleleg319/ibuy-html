@@ -19,7 +19,7 @@ public class SupplierDAO {
 	}
 	
 	public List<Supplier> findSupplierDetails(String productid) throws SQLException{
-		String supplier = "SELECT * FROM supplier as s , supplier_product_price as p WHERE p.idproduct = ? AND p.idsupplier = s.supplierid ";
+		String supplier = "SELECT * FROM supplier as s , supplier_product_price as p WHERE p.idproduct = ? AND p.idsupplier = s.supplierid ORDER BY p.price ASC";
 		List<Supplier> suppliers = new ArrayList<Supplier>();
 		try (PreparedStatement ps = con.prepareStatement(supplier);) {
 			ps.setString(1,productid);
