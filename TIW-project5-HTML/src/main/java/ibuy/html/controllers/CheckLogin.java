@@ -99,6 +99,7 @@ public class CheckLogin extends HttpServlet {
 		} catch (SQLException e) {
 			path = "errorPage.html";
 			response.sendRedirect(path);
+			return;
 		}
 
 		// If the user exists, add info to the session and go to home page, otherwise

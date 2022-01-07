@@ -129,6 +129,7 @@ public class GotoHome extends HttpServlet {
 			String path;
 			path = "errorPage.html";
 			response.sendRedirect(path);
+			return;
 		}
 	}
 

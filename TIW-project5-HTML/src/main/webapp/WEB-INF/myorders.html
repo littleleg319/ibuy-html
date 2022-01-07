@@ -12,7 +12,7 @@
   <li><a th:href="@{/GoToHome}">Home Page</a></li>
   <li><a th:href="@{/Orders}" class="active">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
-  <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
+  <li class="welcome" th:text="${'Welcome back ' + session.user.name + '! Enjoy your shopping!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
 <div>
@@ -32,8 +32,8 @@
 		</thead>
 		<tbody>
 			<tr th:each="o : ${orders}">
-				<td th:text="${o.name}"></td>
-				<td th:text="${o.suppliername}"></td>
+				<td class="pcy" th:text="${o.name}"></td>
+				<td class="pcy" th:text="${o.suppliername}"></td>
 				<td>
 				<table class="details"> 
 					<thead class="details">
@@ -45,17 +45,17 @@
 					</thead>
 					<tbody>
 					<tr th:each="i : ${orderitems}" th:if="${i.orderid} == ${o.orderid}">
-						<td th:text="${i.productid}"></td>
-						<td th:text="${i.qta}"></td>
-						<td th:text="${'EUR ' + i.price}"></td>
+						<td class="pcy" th:text="${i.productid}"></td>
+						<td class="pcy" th:text="${i.qta}"></td>
+						<td class="pcy" th:text="${'EUR ' + i.price}"></td>
 					</tr>
 					</tbody>
 				</table>
 				</td>
-		    	<td th:text="${o.price}"></td>	
-		    	<td th:text="${'EUR ' + o.shipcost}"></td>
-		    	<td th:text="${o.shipdate}"></td>
-		    	<td th:text="${o.shipaddress}"></td>
+		    	<td class="pcy" th:text="${'EUR ' + o.price}"></td>	
+		    	<td class="pcy" th:text="${o.shipcost == '0.0'} ? 'Free Shipping' : 'EUR ' + ${o.shipcost}"></td>
+		    	<td class="pcy" th:text="${o.shipdate}"></td>
+		    	<td class="pcy" th:text="${o.shipaddress}"></td>
 
 		    </tr> 
 		</tbody>

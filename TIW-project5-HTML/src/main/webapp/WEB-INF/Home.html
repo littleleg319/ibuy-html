@@ -12,7 +12,7 @@
   <li><a th:href="@{/GoToHome}" class="active">Home Page</a></li>
   <li><a th:href="@{/Orders}">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
-  <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
+  <li class="welcome" th:text="${'Welcome back ' + session.user.name + '! Enjoy your shopping!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
 
@@ -42,17 +42,21 @@
 			<tr>
 				<th>Name</th>
 				<th>Description</th>
+				<th>See Details</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:if="${products != null}" th:each="p : ${products}">
 				<td th:text="${p.name}"></td>
 				<td th:text="${p.description }"></td>
+				<td><a th:href="@{/ProductDetail(keyword=,code=${p.code},category=${p.category})}">Show Details</a></td>
 			</tr>
 			<tr th:if="${default_prods != null}" th:each="d : ${default_prods}">
 				<td th:text="${d.name}"></td>
 				<td th:text="${d.description }"></td>
+				<td><a th:href="@{/ProductDetail(keyword=,code=${d.code},category=${d.category})}">Show Details</a></td>
 			</tr>
+			
 		</tbody>
 	</table>
 </body>

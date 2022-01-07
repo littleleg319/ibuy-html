@@ -59,8 +59,6 @@ public class ShowResults extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//		response.getWriter().append("Served at: ").append(request.getContextPath());
 		//Dichiarazione parametri
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
@@ -126,6 +124,7 @@ public class ShowResults extends HttpServlet {
 				String path;
 				path = "errorPage.html";
 				response.sendRedirect(path);
+				return;
 			}
 }	
 		

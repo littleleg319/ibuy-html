@@ -98,7 +98,7 @@ public class Orders extends HttpServlet {
 		Cart order = new Cart();
 		List<CartItem> myitems = new ArrayList<CartItem>();
 		OrderDAO createOrder = new OrderDAO(connection);
-		
+
 		//Prendo la sessione
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
@@ -106,15 +106,21 @@ public class Orders extends HttpServlet {
 		User user = (User) s.getAttribute("user");
 		
 		//Retrieve dati
-		supplierid = Integer.parseInt(request.getParameter("supplierid"));
+		try { supplierid = Integer.parseInt(request.getParameter("supplierid"));
 		cart_global = (List<Cart>) s.getAttribute("cart");
 		items = (List<CartItem>) s.getAttribute("items");
-		
+		} catch (NumberFormatException e) {
+			String path;
+			path = "errorPage.html";
+			response.sendRedirect(path);
+			return;
+		}
 		//controllo che non siano vuoti
 		if (s.getAttribute("cart") == null || s.getAttribute("items") == null) {
 			String path;
 			path = "errorPage.html";
 			response.sendRedirect(path);
+			return;
 		}
 		
 		//cerco il carrello di cui devo fare l'ordine 
@@ -127,6 +133,7 @@ public class Orders extends HttpServlet {
 			String path;
 			path = "errorPage.html";
 			response.sendRedirect(path);
+			return;
 		} else {
 			//cerco gli items
 				for (CartItem i : items) {
@@ -137,6 +144,7 @@ public class Orders extends HttpServlet {
 					String path;
 					path = "errorPage.html";
 					response.sendRedirect(path);
+					return;
 				} else {
 					Integer esito = createOrder.CreateOrder(user.getId(),myitems, order);
 					if (esito == 0) { //tutto ok --> rimuovo il carrello e gli items
@@ -161,19 +169,14 @@ public class Orders extends HttpServlet {
 						String path;
 						path = "errorPage.html";
 						response.sendRedirect(path);
+						return;
 					}
 				}
 			
 		} 
-		//String path = "/WEB-INF/Home.html";
-		//String path = getServletContext().getContextPath() + "/GoToHome";
-		//ServletContext servletContext = getServletContext();
-		//final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		//ctx.setVariable("MessageOk", "Thank you! Your order has been successfully received! ");
-		//templateEngine.process(path, ctx, response.getWriter());
 		String path = getServletContext().getContextPath() + "/GoToHome" + "?order_ok=true";
 		response.sendRedirect(path);
-	}
+		}
 	
 	public void destroy() {
 		try {

@@ -46,6 +46,9 @@ public class SupplierDAO {
 		String query = "SELECT * FROM pricerange WHERE supplierid = ?";
 		List<PriceRange> ranges = new ArrayList<PriceRange>();
 		int i;
+		if (supplierid == null) {
+			return null;
+		}
 		for (i=0; i<supplierid.length; i++) {
 			try (PreparedStatement ps = con.prepareStatement(query);) {
 				String idsuppl = String.valueOf(supplierid[i]);

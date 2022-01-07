@@ -83,8 +83,6 @@ public class ShoppingCart extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
 		//Dichiarazione Parametri
 		Integer suppid = null;
 		String prodid = null;
@@ -116,11 +114,13 @@ public class ShoppingCart extends HttpServlet {
 				String path;
 				path = "errorPage.html";
 				response.sendRedirect(path);
+				return;
 		} 
 		} catch (NumberFormatException | NullPointerException e) {
 			String path;
 			path = "errorPage.html";
 			response.sendRedirect(path);
+			return;
 		}
 		
 		
@@ -131,6 +131,7 @@ public class ShoppingCart extends HttpServlet {
 			String path;
 			path = "errorPage.html";
 			response.sendRedirect(path);
+			return;
 		}
 		//Prendo la sessione
 		HttpServletRequest req = (HttpServletRequest) request;
@@ -150,6 +151,7 @@ public class ShoppingCart extends HttpServlet {
 				String path;
 				path = "errorPage.html";
 				response.sendRedirect(path);
+				return;
 			}
 			
 			//Creo l'item per il prodotto scelto

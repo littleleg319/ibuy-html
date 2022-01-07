@@ -12,31 +12,14 @@
   <li><a th:href="@{/GoToHome}" class="active">Home Page</a></li>
   <li><a th:href="@{/Orders}">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}">My Shopping Cart</a></li>
-  <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
+  <li class="welcome" th:text="${'Welcome back ' + session.user.name + '! Enjoy your shopping!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
 
-<p class="text" th:unless="${keyword} == ''" th:text="'Results for ' + ${keyword}"></p>
+
 
 <div></div>
-	<table>
-		<thead>
-			<tr>
-				<th>Code</th>
-				<th>Product Name</th>
-				<th>Starting from</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="p : ${products}">
-				<td th:text="${p.code}"></td>
-				<td><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code},category=${category})}" th:text="${p.name}"></a></td>
-				<td th:text="${'EUR ' + p.price}"></td>
-			</tr>
-		</tbody>
-	</table>
-
-	<table class="product" th:if="${prod_details != null}">
+<table class="product" th:if="${prod_details != null}">
 
 			<tr class="product" th:each="pd : ${prod_details}">
 				<td> 
@@ -53,9 +36,8 @@
 			</td>
 			</tr>
 		</table>
-		<br>
-
-		<table class="seller" th:if="${suppl_details != null}">
+	<br>
+<table class="seller" th:if="${suppl_details != null}">
 		<thead >		
 			<tr>		
 				<th> Seller Name </th>
@@ -65,11 +47,11 @@
 				<th> Quantity</th>
 				<th> Shipping cost Details </th>
 			</tr>
-			<tr th:each="s : ${suppl_details}">
-			<td th:text="${s.name}"></td>
-			<td th:text="${s.rating}"></td>
-		    <td th:text="${s.prodPrice}">€ </td>
-		    <td th:text="${s.freeshipping}">€</td>
+			<tr class="pcy" th:each="s : ${suppl_details}">
+			<td class="pcy" th:text="${s.name}"></td>
+			<td class="pcy" th:text="${s.rating}"></td>
+		    <td class="pcy" th:text="${'EUR ' + s.prodPrice}">€ </td>
+		    <td class="pcy" th:text="${'EUR ' + s.freeshipping}">€</td>
 		    <td>
 		    <form th:action="@{/ShoppingCart}" method="POST">
 		    <input class="qta" type="number" name="qta" min="1">
@@ -88,10 +70,10 @@
 		    	<th>Maximum Articles</th>
 		    	<th>Shipping fee</th>
 		    	</tr>
-		    	<tr th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}">
-		    	<td th:text="${r.minArt}"></td>
-				<td th:text="${r.maxArt == 9999999 ? '-' : r.maxArt}"></td>
-		    	<td th:text="${r.price}">€</td>	
+		    	<tr class="pcy" th:each="r : ${ranges}" th:if="${r.supplierid} == ${s.supplierid}">
+		    	<td class="pcy" th:text="${r.minArt}"></td>
+				<td class="pcy" th:text="${r.maxArt == 9999999 ? '-' : r.maxArt}"></td>
+		    	<td class="pcy" th:text="${'EUR ' + r.price}">€</td>	
 		    	</tr>
 		    	</table> 
 		    </td>
@@ -102,13 +84,38 @@
 		    	<th>Total Cost in Cart from this Seller</th>
 		    	</tr>
 		    	<tr>
-		    	<td th:text="${c.totalQta}"></td>
-				<td th:text="${c.totalCost}">€</td>
+		    	<td class="pcy" th:text="${c.totalQta}"></td>
+				<td class="pcy" th:text="${'EUR ' + c.totalCost}">€</td>
 		    	</tr>
 		    </table> 
 		    </td>  
 			</tr>
 		</thead>
 	</table>
+			<br>
+		<p class="text" th:unless="${keyword} == ''" th:text="'Results for ' + ${keyword}"></p>
+		<p class="text" th:if="${code != null and keyword == ''}" th:text="'Products of the same category'"></p>
+		<p class="text" th:if="${category != null and keyword == '' and code == null}" th:text="'Products of category ' + ${category}"></p>
+	<table>
+		<thead>
+			<tr>
+				<th>Code</th>
+				<th>Product Name</th>
+				<th>Starting from</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="p : ${products}">
+				<td class="pcy" th:text="${p.code}"></td>
+				<td class="pcy" ><a th:href="@{/ProductDetail(keyword=${keyword},code=${p.code},category=${category})}" th:text="${p.name}"></a></td>
+				<td class="pcy" th:text="${'EUR ' + p.price}"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	
+
+
+		
 </body>
 </html>

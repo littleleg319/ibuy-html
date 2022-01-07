@@ -146,6 +146,10 @@ tr:nth-child(odd){
 	background-color: white;
 	}
 
+td:nth-child(odd){
+	width:10%
+	}
+
 th {
   background-color: #6083CB;
   color: white;
@@ -220,6 +224,10 @@ table.policy {
     background-color: thistle;
 }
 
+.pcy {
+	text-align: center;
+}
+
 .checkout {
     background-color: #2492ff;
     color: white;
@@ -253,11 +261,12 @@ table.details {
     width: 100%;
 }
 
-thead.details{
+th.details, thead.details{
 	width: auto;
     padding: initial;
-    font-size: small;
+    font-size: medium;
     white-space: nowrap;
+    text-align:center;
 }
 
 .empty{

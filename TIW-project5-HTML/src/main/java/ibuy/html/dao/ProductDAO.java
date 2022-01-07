@@ -67,7 +67,7 @@ public class ProductDAO {
 					res.next();
 			int s = res.getInt("total");
 			if (s > 0) { //prendo i dettagli dei prodotti
-			String query1 = "SELECT code, name, description FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? ORDER BY timestamp DESC LIMIT 5";
+			String query1 = "SELECT code, name, description, category FROM product INNER JOIN user_product ON product.code = user_product.productid  WHERE user_product.userid = ? ORDER BY timestamp DESC LIMIT 5";
 			try (PreparedStatement pstatement = con.prepareStatement(query1);) {
 				pstatement.setString(1, usr);
 				try (ResultSet result = pstatement.executeQuery();) {
@@ -79,6 +79,7 @@ public class ProductDAO {
 						prod.setCode(result.getString("code"));
 						prod.setName(result.getString("name"));
 						prod.setDescription(result.getString("description"));
+						prod.setCategory(result.getString("category"));;
 						prods.add(prod);
 						}
 					}

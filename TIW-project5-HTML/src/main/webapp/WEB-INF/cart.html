@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>iBuy Shopping Center</title>
 <link rel="stylesheet" type="text/css" media="all" href="../css/mystyle.css" th:href="@{/css/mystyle.css}"/>
 </head>
@@ -12,7 +12,7 @@
   <li><a th:href="@{/GoToHome}">Home Page</a></li>
   <li><a th:href="@{/Orders}">My Orders</a></li>
   <li><a th:href="@{/ShoppingCart}" class="active">My Shopping Cart</a></li>
-  <li class="welcome" th:text="${'Hi ' + session.user.name + '!'}"></li>
+  <li class="welcome" th:text="${'Welcome back ' + session.user.name + '! Enjoy your shopping!'}"></li>
   <li class="logout"><a th:href="@{/Logout}" class="logout">Logout</a></li>
 </ul>
 	
@@ -28,15 +28,15 @@
 		<table class="orders" th:if="${session.cart != null}">
 		<thead>
 			<tr>
-				<th>Supplier</th>
-				<th>Product List</th>
-				<th>Total Cost</th>
-				<th>Shipping Fee</th>
+				<th class="pcy">Seller Name</th>
+				<th class="pcy">Product List</th>
+				<th class="pcy">Total Cost</th>
+				<th class="pcy">Shipping Fee</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="c : ${session.cart}" >
-				<td th:text="${c.name}"></td>
+				<td class="pcy" th:text="${c.name}"></td>
 				<td>
 				<table class="details">
 		    	<tr>
@@ -44,15 +44,15 @@
 		    	<th class="details">Product Name</th>
 		    	<th class="details">Qta</th>
 		    	</tr>
-		    	<tr th:each="i : ${session.items}" th:if="${i.supplierid} == ${c.supplierid}">
-		    	<td th:text="${i.productid}"></td>
-		    	<td th:text="${i.name}"></td>
-		    	<td th:text="${i.qta}"></td>
+		    	<tr class="pcy" th:each="i : ${session.items}" th:if="${i.supplierid} == ${c.supplierid}">
+		    	<td class="pcy" th:text="${i.productid}"></td>
+		    	<td class="pcy" th:text="${i.name}"></td>
+		    	<td class="pcy" th:text="${i.qta}"></td>
 		    	</tr>
 		    	</table> 
 				</td>
-				<td th:text="${'EUR ' + c.totalCost}"></td>
-				<td th:text="${'EUR ' + c.fee}"></td>
+				<td class="pcy" th:text="${'EUR ' + #numbers.formatDecimal(c.totalCost, 0, 'COMMA', 2, 'POINT')}"></td>
+				<td class="pcy" th:text="${c.fee == '0.0'} ? 'Free Shipping' : 'EUR ' + ${c.fee}"></td>
 				<td class="nocolor">
 				<form th:action="@{/Orders}" method="POST">
 		    	<input class="checkout" type="submit" name="checkout" value="Checkout!">
