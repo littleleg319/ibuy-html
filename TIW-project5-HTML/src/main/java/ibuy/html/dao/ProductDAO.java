@@ -158,6 +158,7 @@ public class ProductDAO {
 		
 		public void UpdateProductSeen(int userid, String productId)  {
 			String usr = String.valueOf(userid);
+			int count = 0;
 			String query = "SELECT  * FROM user_product  WHERE userid = ? AND productid =?";
 			try (PreparedStatement pstatement = con.prepareStatement(query);) {
 				pstatement.setString(1, usr);
@@ -170,16 +171,28 @@ public class ProductDAO {
 						ps.setString(2, productId);
 						int esito = ps.executeUpdate();
 							if (esito != 0) {
-								//ho fatto l'insert --> cancello la riga pi� vecchia 
+								//ho fatto l'insert --> cancello la riga pi� vecchia se più di 5 entries
 								try {
+									
+									String checkentryquery = "SELECT COUNT(*) as total FROM user_product WHERE userid = ?";
+									try (PreparedStatement check = con.prepareStatement(checkentryquery);){
+										check.setString(1, usr);
+										try (ResultSet res = check.executeQuery();) {
+												res.next();
+												count = res.getInt("total");
+											}
+										}
+									} catch (SQLException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+								}
+									if (count > 5) {
 									String delete = "DELETE FROM user_product where userid = ? order by timestamp ASC LIMIT 1";
 									PreparedStatement dl = con.prepareStatement(delete);
 									dl.setString(1, usr);
 									dl.executeUpdate();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-							}
+									}
+								
 						} 
 					} else { //aggiorno timestamp di una entry esistente
 						String update_seen = "UPDATE user_product SET timestamp=NOW() WHERE userid = ? AND productid = ?";
